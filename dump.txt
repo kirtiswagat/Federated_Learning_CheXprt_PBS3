@@ -1,0 +1,1155 @@
+# Federated Learning with a Simulated Audit Ledger for CheXpert Chest X-ray Classification
+
+Code, small result files, and manuscript tooling for the revised Scientific Reports submission on multi-label chest X-ray classification with federated learning (FedAvg, FedProx, CBRA-FL), a simulated audit ledger, and a poisoning-robustness study.
+
+> **Scope of the evidence.** All reported federated runs use one seed (42), five simulated clients on one machine, and the patient-level internal evaluation set described below. The ledger is a simulation (no network, no distributed consensus). The released code does not support claims of generalisation to real institutions, of ledger-based poisoning prevention, or of CBRA-FL beating FedAvg. The numerical evidence for every manuscript statement is in [Manuscript_Findings_Evidence_Pack.md](Manuscript_Findings_Evidence_Pack.md).
+
+---
+
+## 1. Repository layout
+
+```
+fl-chexpert-audit-ledger/
+├── README.md
+├── requirements.txt                 # pinned versions used for the reported runs
+├── Manuscript_Findings_Evidence_Pack.md   # single source of truth for every number in the paper
+├── src/                             # library code (importable package `src`)
+│   ├── config.py                    # dataclass configs, 14 label order, run registry R01-R05
+│   ├── device.py, reproducibility.py
+│   ├── data/                        # CheXpert dataset, audit, patient partitions, heterogeneity
+│   ├── models/                      # ResNet-50 (14 outputs), model (de)serialisation + SHA-256
+│   ├── federated/                   # client training, FedAvg/FedProx runner, aggregation, resume
+│   ├── blockchain/                  # simulated ledgers (see section 5), identities, validation
+│   ├── evaluation/                  # metrics, patient-cluster bootstrap, paired tests, BH correction
+│   ├── monitoring/                  # progress, runtime breakdown, gates, artifact manifest
+│   ├── p2/                          # scalability / uncertainty-policy runs and analysis
+│   ├── p3/                          # CBRA-FL weights, runner, analysis
+│   ├── p5/                          # artifact-only manuscript table pipeline and claims audit
+│   ├── reporting/                   # manifest and table writers
+│   └── robustness/                  # attacks, aggregators (median, trimmed mean, clipping), harness
+├── P1/  P2/  P3/  P4/  P5/  P6/     # command-line entry points (section 4)
+├── tests/                           # 71 pytest tests
+├── Output/                          # small result files that back the paper (section 6)
+├── Manuscript_Revision/             # manuscript sources, build/check scripts, figure script
+├── docs/
+│   ├── README_GPU_vs_M4_EXECUTION.md
+│   └── design_notes/P1..P6/         # protocol descriptions and pseudo-algorithms
+```
+
+## 2. Setup
+
+Requirements: Python 3.12, macOS with Apple Silicon (MPS) for the reported runs. CUDA is possible via the config flags (`prefer_cuda`, `require_mps`; see [docs/README_GPU_vs_M4_EXECUTION.md](docs/README_GPU_vs_M4_EXECUTION.md)), but the reported timings are MPS timings.
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+pip install pypdf                  # only for Manuscript_Revision/check_overlap.py
+python3 -m pytest -q tests         # expected: 71 passed
+```
+
+`requirements.txt` lists the versions recorded in `Output/p1_critical_revision/frozen/frozen_config.json`. If a pinned version is no longer installable, use the closest release and note it; the frozen initial checkpoint and bit-level results can then differ.
+
+All commands below are run **from the repository root**; `--root .` means the repository root, and results are written below `Output/`. `DATA` is a folder that contains `CheXpert-v1.0-small/`.
+
+## 3. Data preparation
+
+The CheXpert images and CSV files are **not** included (dataset licence). Obtain the *CheXpert-v1.0-small* release from Stanford ML Group and place it at `DATA/CheXpert-v1.0-small/` (`train/`, `valid/`, `train.csv`, `valid.csv`).
+
+| Step | Command | Result |
+|---|---|---|
+| Split by patient (80 / 20, seed 42) and verify digests | `python3 P1/run_p1_prepare_splits.py --data-root DATA` | `train_split.csv` (179,058 rows), `val_split.csv` (44,356 rows, the *internal evaluation set*); the SHA-256 digests match the files used for the reported runs |
+| Dataset audit (optional) | `python3 P1/run_p1_audit.py --root . --train-csv DATA/CheXpert-v1.0-small/train_split.csv --valid-csv DATA/CheXpert-v1.0-small/val_split.csv` | `Output/p1_critical_revision/audits/` |
+| Client partitions | see below | `*_client_assignment.csv`, `*_partition_manifest.csv`, heterogeneity tables |
+| Verify partitions | `python3 P1/run_p1_prepare_splits.py --data-root DATA --verify-partitions Output/p1_critical_revision/partitions` | `[OK]` per file against `partitions.sha256` |
+
+Partitions (patient-exclusive, seed 42):
+
+```bash
+P=Output/p1_critical_revision/partitions
+python3 P1/run_p1_partitions.py DATA/CheXpert-v1.0-small/train_split.csv $P --clients 5  --mode iid
+python3 P1/run_p1_partitions.py DATA/CheXpert-v1.0-small/train_split.csv $P --clients 5  --mode dirichlet --alpha 0.3
+python3 P1/run_p1_partitions.py DATA/CheXpert-v1.0-small/train_split.csv $P --clients 5  --mode dirichlet --alpha 0.1
+python3 P1/run_p1_partitions.py DATA/CheXpert-v1.0-small/train_split.csv $P --clients 10 --mode iid   # scalability runs
+python3 P1/run_p1_partitions.py DATA/CheXpert-v1.0-small/train_split.csv $P --clients 20 --mode iid
+```
+
+The client-assignment CSVs contain CheXpert image paths and labels and are therefore git-ignored. Regenerating them with the commands above reproduces the original SHA-256 digests (checked for the 5-client partitions).
+
+## 4. Code structure and execution commands
+
+Each `Pn/` folder holds command-line scripts; the library code they call is in `src/`. Add `PYTHONPATH=.` if a script reports `No module named 'src'`.
+
+### P1: baselines, statistics, ledger
+
+| Script | Purpose |
+|---|---|
+| `run_p1_freeze.py --root .` | Records package versions and device, builds the common initial ResNet-50 checkpoint (seed 42) and its SHA-256. All runs start from this checkpoint. |
+| `run_p1_partitions.py` | Deterministic patient-level IID or Dirichlet partitions plus heterogeneity metrics (prevalence shift, Jensen-Shannon divergence). |
+| `run_p1_prepare_splits.py` | Recreates and verifies the 80/20 patient split and partition digests (this repository). |
+| `run_p1_audit.py` | Dataset audit: counts, image health, patient leakage. |
+| `run_p1_experiments.py` | Federated training runs R01-R05 (FedAvg, FedProx), per-round evaluation, ledger writing, resume support. |
+| `run_p1_statistics.py` | Patient-cluster bootstrap (2000 iterations), Benjamini-Hochberg correction, paired comparisons. Needs saved predictions. |
+| `run_p1_runtime.py` | Per-round runtime and ledger overhead benchmark. |
+| `run_p1_blockchain_tests.py` | Tamper-detection and ledger validation suite on the digest ledger. |
+| `run_p1_secure_ledger_validation.py` | Validation of the commitment ledger (`SecureLedger`) on real update files. |
+| `run_p1_audit_all_ledgers.py` | Audits every completed run's `ledger.json`. |
+| `run_p1_reporting.py <run_dir>` | Validates a run's artifact manifest. |
+
+Run mapping (internal ID: manuscript name): R01 FedAvg-IID (10 rounds; round-5 and round-10 endpoints), R02 FedAvg-Dir0.3, R03 FedAvg-Dir0.1, R04 FedProx-IID (mu 0.001), R05 FedProx-Dir0.1.
+
+```bash
+python3 P1/run_p1_freeze.py --root .
+for R in R01 R02 R03 R04 R05; do
+  python3 P1/run_p1_experiments.py --root . --run-id $R --data-root DATA --num-workers 0 --resume
+done
+python3 P1/run_p1_statistics.py --root . --output Output/p1_critical_revision/statistics --iterations 2000 --seed 42 --workers 4
+python3 P1/run_p1_runtime.py --root .
+python3 P1/run_p1_blockchain_tests.py
+python3 P1/run_p1_audit_all_ledgers.py
+```
+
+A 5-round run takes about 4.3 h on an Apple M-series GPU (MPS); R01 (10 rounds) takes about twice as long. `--rounds`, `--max-train-per-client`, and `--max-valid` are smoke-test options only.
+
+### P2: scalability and uncertainty policy
+
+| Script | Purpose |
+|---|---|
+| `run_p2_experiment.py --root . --run-id R06` | Scalability / subsampling / uncertainty-policy runs defined in `src/p2/registry.py`. |
+| `run_p2_validate.py <run_dir>` | Validates a P2 run's artifacts. |
+| `run_p2_analysis.py --runs-root Output/p2_scaling_sensitivity --output <dir>` | Aggregates P2 runs. |
+| `run_p2_uncertainty_analysis.py --root . --data-root DATA` | Re-scores saved predictions under U-Zero / U-One / U-Ignore label policies (no retraining). Output in `Output/p2_uncertainty/`. |
+
+Only R06, R08 and R21 are present under `Output/p2_scaling_sensitivity/`; the other prespecified P2 runs were not run.
+
+### P3: CBRA-FL
+
+CBRA-FL weights clients by sample count, rarity of their positive labels, and drift from the global model: `w_k ∝ n_k^α · q_k^β · exp(-γ d_k)` (see `src/p3/cbra.py`).
+
+| Script | Purpose |
+|---|---|
+| `run_p3_cbra.py --root . --run-id R12 --data-root DATA` | One CBRA-FL run (R12-R19; settings in `src/p3/registry.py`). |
+| `run_p3_validate.py <run_dir>` | Artifact validation. |
+| `run_p3_statistics.py --root .` | Bootstrap comparison against baselines. |
+| `run_p3_analysis.py --runs-root Output/p3_cbra --output Output/p3_analysis` | Weight tables and sensitivity summaries. |
+
+```bash
+for R in R12 R13 R14 R15 R16 R18 R19; do
+  python3 P3/run_p3_cbra.py --root . --run-id $R --data-root DATA --resume
+done
+python3 P3/run_p3_statistics.py --root .
+python3 P3/run_p3_analysis.py --runs-root Output/p3_cbra --output Output/p3_analysis
+```
+
+Names: R12 CBRA-v1, R13 CBRA-v2 (beta_q 1.5), R14 sample-lower, R15 sample-higher, R16 rarity-lower, R18 drift-off, R19 drift-strong. R13 and R17 are the same setting; only R13 is reported.
+
+### P4: poisoning robustness
+
+One-round attack studies (label flipping, targeted backdoor) against FedAvg, coordinate median, trimmed mean, and norm-clipped FedAvg, starting from the round-5 FedAvg-Dir0.1 model.
+
+| Script | Purpose |
+|---|---|
+| `run_p4_threat_table.py --output-root <dir>` | Writes the threat-model table. |
+| `run_p4_clean_reference.py --root .` | Clean reference condition. |
+| `run_p4_poisoned_updates.py --root . --data-root DATA --source-round <R03 round 5 dir>` | Trains and saves poisoned client updates. |
+| `run_p4_real_attack_matrix.py --root . --data-root DATA --aggregators fedavg coordinate_median trimmed_mean norm_clipped_fedavg` | Attack matrix on real updates, incl. backdoor success rate. |
+| `run_p4_attack_matrix.py` | Earlier synthetic attack matrix (kept for transparency; not used for the reported attack numbers). |
+| `run_p4_reporting.py <condition_results.csv> --output-root <dir>` | Degradation tables and figures. |
+
+Attack AUROC values come from **one training round** and must not be compared with the five-round baselines. The attack table in the paper is taken from evidence-pack section 7.2 (`Output/p4_v3_real_poisoning/`).
+
+### P5: manuscript tables
+
+```bash
+python3 P5/run_p5_pipeline.py --root . --output Output/manuscript_tables
+python3 P5/run_p5_audit.py     --root . --output Output/manuscript_tables
+python3 P5/build_manuscript_tables.py --root . --p4 Output/p4_v3_real_poisoning
+```
+
+Builds Tables 1-6 (CSV and Markdown) and a claims audit from run artifacts only. `table5_attack_auroc_drop.*` is stale; use the pack section 7.2 table.
+
+### P6: centralised baseline and Grad-CAM
+
+| Script | Purpose |
+|---|---|
+| `run_p6_centralized_baseline.py --data-root DATA --epochs 5` | Same ResNet-50 and optimiser trained on the pooled training set (5 epochs). Output `Output/p6_centralized/C01/`. |
+| `run_p6_centralized_statistics.py` | Bootstrap CIs and paired comparisons against federated runs. Output `Output/p6_centralized/statistics/`. |
+| `run_p6_gradcam.py --data-root DATA` | Five confidence-selected Grad-CAM examples from the FedAvg-Dir0.1 endpoint (qualitative only; no localisation metric). |
+
+### Tests
+
+```bash
+python3 -m pytest -q tests
+```
+
+Covers partitions, aggregation, CBRA weights, bootstrap statistics, ledger tamper detection, signatures, secure ledger, attacks, clipping, resume, and the claims audit.
+
+### Manuscript tooling (`Manuscript_Revision/`)
+
+Run from the repository root; none needs the data.
+
+```bash
+python3 Manuscript_Revision/build_task2d1.py        # fills Results (baselines, per label, CBRA) from the pack
+python3 Manuscript_Revision/build_task2d2.py        # fills Results (runtime, uncertainty, attacks) from the pack
+python3 Manuscript_Revision/assemble_manuscript.py  # assembles manuscript + response letter
+python3 Manuscript_Revision/to_scireports.py        # reorders to the Scientific Reports layout
+python3 Manuscript_Revision/check_traceability.py   # numbers in the drafts that are not in the pack
+python3 Manuscript_Revision/check_forbidden_claims.py
+python3 Manuscript_Revision/check_overlap.py original_submission.pdf   # word-overlap proxy for similarity
+cd Manuscript_Revision/figures && python3 make_figures.py ../../figures_out   # standalone figure script with hard-coded numbers
+```
+
+`structured_writeups/` holds the section drafts and the assembled HTML (`Revised_Manuscript_SciReports.html`, `Response_to_Reviewers_SciReports.html`). Figures used in the manuscript are in `Manuscript_Revision/figures/figures_out/`.
+
+## 5. The two ledgers
+
+| Class | Role | Status |
+|---|---|---|
+| `PermissionedLedger` (`src/blockchain/permissioned_ledger.py`) | Digest ledger: hash-chained blocks with update digests; Ed25519 signature computed and timed but not stored or verified | Used for all reported runs |
+| `SecureLedger` (`src/blockchain/secure_ledger.py`) | Commitment ledger with stored signatures and verification | Validated separately (10 checks, tests); not used in reported runs |
+
+Neither ledger runs on a network or reaches distributed consensus.
+
+## 6. Results included in `Output/`
+
+| Folder | Contents |
+|---|---|
+| `p1_critical_revision/` | `runs/R01..R05` (round history, client details, endpoint metrics, runtime, `ledger.json`, manifests), `statistics/` (CIs, paired comparisons), `runtime/`, `heterogeneity/`, `blockchain*/`, `audits/` (summaries), `partitions/` (manifests and digests only), `frozen/` (config and digests) |
+| `p2_scaling_sensitivity/`, `p2_uncertainty/` | P2 run specs and label-policy analysis |
+| `p3_cbra/`, `p3_analysis*/` | CBRA-FL runs R12-R19 (weights, aggregation details, metrics), analyses |
+| `p4_v3_real_poisoning/` | Attack results and backdoor success rate |
+| `p6_centralized/`, `p6_gradcam/` | Centralised baseline summary and statistics, Grad-CAM figure and table |
+| `manuscript_tables/` | Tables 1-6 and claims audit |
+
+### Not in git (regenerate or publish separately)
+
+Model checkpoints (`*.pt`, about 90 MB each), per-image prediction files (about 230 MB, needed by the statistics scripts), `bootstrap_draws.csv`, `image_health_report.csv`, client-assignment CSVs, logs, and superseded or invalid run folders. Publish the predictions and checkpoints as a release asset or on Zenodo and link them here: `[ARTIFACT-URL-TODO]`.
+
+## 7. Reproducibility notes
+
+- Seed 42 everywhere; a single common frozen initial checkpoint; FP32; no data augmentation; AdamW (lr 1e-4, weight decay 1e-5), batch size 16, 320x320 input, dropout 0.3, ImageNet-pretrained ResNet-50.
+- Label policy: uncertain (-1) and unmentioned labels are both treated as 0 (U-Zero); other policies are evaluated post hoc in `Output/p2_uncertainty/`.
+- Patient-level split: 153,016 training and 38,011 internal-evaluation frontal images after the dataset filter; the official 234-image `valid.csv` is not used for model selection.
+- MPS runs are not bit-for-bit deterministic across PyTorch versions; expect small metric differences if you re-run.
+- Not run: multiple seeds, commitment-ledger federated run, real multi-institution data, expert-annotated localisation.
+
+## 8. Citation, licence, contact
+
+- Citation: `[PAPER-CITATION-TODO]`
+- Licence: `[LICENCE-TODO]` (code only; CheXpert data keep their own licence)
+- Repository URL: `[REPO-URL-TODO]`
+
+##########----------------------------------------------------------------------#######
+#########----------Requirements-------------------------------------------------#######
+torch==2.14.1
+torchvision==0.29.1
+pandas==3.0.6
+numpy==2.5.3
+scikit-learn==1.9.1
+scipy==1.18.1
+Pillow==12.3.0
+matplotlib>=3.7
+cryptography==50.0.2
+pytest==9.1.1
+
+##########----------------------------------------------------------------------#######
+#########----------src/config-------------------------------------------------#######
+"""Frozen, serializable configuration for the P1 experiments."""
+
+from __future__ import annotations
+
+import json
+import platform
+import sys
+from dataclasses import asdict, dataclass, field, replace
+from pathlib import Path
+from types import MappingProxyType
+from typing import Any, Mapping
+
+LABELS = (
+    "No Finding",
+    "Enlarged Cardiomediastinum",
+    "Cardiomegaly",
+    "Lung Opacity",
+    "Lung Lesion",
+    "Edema",
+    "Consolidation",
+    "Pneumonia",
+    "Atelectasis",
+    "Pneumothorax",
+    "Pleural Effusion",
+    "Pleural Other",
+    "Fracture",
+    "Support Devices",
+)
+
+
+@dataclass(frozen=True)
+class ProjectPaths:
+    root: Path
+    train_csv: Path | None = None
+    valid_csv: Path | None = None
+    output_dir: Path | None = None
+
+    def __post_init__(self) -> None:
+        root = self.root.expanduser().resolve()
+        object.__setattr__(self, "root", root)
+        object.__setattr__(self, "train_csv", self.train_csv or root / "train.csv")
+        object.__setattr__(self, "valid_csv", self.valid_csv or root / "valid.csv")
+        object.__setattr__(
+            self,
+            "output_dir",
+            self.output_dir or root / "outputs" / "p1_critical_revision",
+        )
+
+
+@dataclass(frozen=True)
+class DatasetConfig:
+    labels: tuple[str, ...] = LABELS
+    uncertain_policy: str = "zero"
+    frontal_only: bool = True
+
+
+@dataclass(frozen=True)
+class ModelConfig:
+    backbone: str = "resnet50"
+    pretrained: bool = True
+    num_labels: int = 14
+    dropout: float = 0.3
+    image_size: tuple[int, int] = (320, 320)
+
+
+@dataclass(frozen=True)
+class TrainingConfig:
+    seed: int = 42
+    batch_size: int = 16
+    optimizer: str = "AdamW"
+    learning_rate: float = 1e-4
+    weight_decay: float = 1e-5
+    precision: str = "fp32"
+    local_epochs: int = 1
+    threshold: float = 0.5
+
+
+@dataclass(frozen=True)
+class FederatedConfig:
+    clients: int = 5
+    rounds: int = 5
+    partition: str = "iid"
+    dirichlet_alpha: float | None = None
+    method: str = "FedAvg"
+    fedprox_mu: float = 0.001
+
+
+@dataclass(frozen=True)
+class BlockchainConfig:
+    validators: tuple[str, ...] = ("validator_1", "validator_2", "validator_3")
+    majority: int = 2
+    secure: bool = False  # signed votes, verified client signatures, round commitments
+
+
+@dataclass(frozen=True)
+class StatisticalConfig:
+    bootstrap_iterations: int = 2000
+    confidence_level: float = 0.95
+    correction: str = "benjamini-hochberg"
+
+
+@dataclass(frozen=True)
+class RuntimeConfig:
+    prefer_cuda: bool = False
+    require_cuda: bool = False
+    allow_mps: bool = True
+    device: str = "mps"
+    require_mps: bool = True
+    num_workers: int = 0
+
+
+@dataclass(frozen=True)
+class ExperimentConfig:
+    paths: ProjectPaths
+    dataset: DatasetConfig = field(default_factory=DatasetConfig)
+    model: ModelConfig = field(default_factory=ModelConfig)
+    training: TrainingConfig = field(default_factory=TrainingConfig)
+    federated: FederatedConfig = field(default_factory=FederatedConfig)
+    blockchain: BlockchainConfig = field(default_factory=BlockchainConfig)
+    statistics: StatisticalConfig = field(default_factory=StatisticalConfig)
+    runtime: RuntimeConfig = field(default_factory=RuntimeConfig)
+
+    def __post_init__(self) -> None:
+        if self.model.num_labels != len(self.dataset.labels):
+            raise ValueError("model.num_labels must match the frozen label order")
+        if self.dataset.uncertain_policy not in {"zero", "one", "ignore", "mapping"}:
+            raise ValueError("uncertain_policy must be zero, one, ignore, or mapping")
+        if (
+            self.federated.partition == "dirichlet"
+            and self.federated.dirichlet_alpha is None
+        ):
+            raise ValueError("Dirichlet runs require dirichlet_alpha")
+
+    def to_dict(self) -> dict[str, Any]:
+        value = asdict(self)
+        value["paths"] = {key: str(item) for key, item in value["paths"].items()}
+        return value
+
+    def save(self, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+
+def default_config(root: Path) -> ExperimentConfig:
+    return ExperimentConfig(paths=ProjectPaths(root))
+
+
+def environment_report() -> dict[str, Any]:
+    try:
+        import torch
+
+        cuda = torch.version.cuda
+        cuda_available = torch.cuda.is_available()
+        gpu = torch.cuda.get_device_name(0) if cuda_available else None
+        mps = bool(
+            getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
+        )
+        torch_version = torch.__version__
+    except ImportError:
+        cuda = gpu = torch_version = None
+        cuda_available = mps = False
+    return {
+        "python": sys.version,
+        "platform": platform.platform(),
+        "pytorch": torch_version,
+        "cuda": cuda,
+        "cuda_available": cuda_available,
+        "gpu": gpu,
+        "mps_available": mps,
+    }
+
+
+def run_configs(root: Path) -> Mapping[str, ExperimentConfig]:
+    base = default_config(root)
+    values = {
+        "R01": FederatedConfig(clients=5, rounds=10, partition="iid", method="FedAvg"),
+        "R02": FederatedConfig(
+            clients=5,
+            rounds=5,
+            partition="dirichlet",
+            dirichlet_alpha=0.3,
+            method="FedAvg",
+        ),
+        "R03": FederatedConfig(
+            clients=5,
+            rounds=5,
+            partition="dirichlet",
+            dirichlet_alpha=0.1,
+            method="FedAvg",
+        ),
+        "R04": FederatedConfig(
+            clients=5, rounds=5, partition="iid", method="FedProx", fedprox_mu=0.001
+        ),
+        "R05": FederatedConfig(
+            clients=5,
+            rounds=5,
+            partition="dirichlet",
+            dirichlet_alpha=0.1,
+            method="FedProx",
+            fedprox_mu=0.001,
+        ),
+    }
+    return MappingProxyType(
+        {run_id: replace(base, federated=config) for run_id, config in values.items()}
+    )
+    
+########----------------------------------------------------------------------#######
+########----------src/device--------------------------------------------------#######
+"""Explicit device policy shared by training and verification jobs."""
+
+from __future__ import annotations
+
+import torch
+
+
+def resolve_device(
+    prefer_cuda: bool = True, require_cuda: bool = False
+) -> torch.device:
+    if require_cuda and not torch.cuda.is_available():
+        raise RuntimeError("CUDA is required for this job, but CUDA is unavailable")
+    if prefer_cuda and torch.cuda.is_available():
+        return torch.device("cuda")
+    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
+def resolve_mps(require_mps: bool = True) -> torch.device:
+    available = bool(
+        getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
+    )
+    if available:
+        return torch.device("mps")
+    if require_mps:
+        raise RuntimeError("MPS is required for this job, but MPS is unavailable")
+    return torch.device("cpu")
+
+
+def validate_device(device: torch.device, require_cuda: bool = False) -> None:
+    if require_cuda and device.type != "cuda":
+        raise RuntimeError(f"CUDA-designated job resolved to {device.type}")
+
+#########----------------------------------------------------------------------#########
+#########----------src/Reproducibility-----------------------------------------#########
+"""Deterministic setup and portable checkpoint helpers."""
+
+from __future__ import annotations
+
+import os
+import random
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import torch
+
+
+def seed_everything(seed: int) -> None:
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    torch.use_deterministic_algorithms(True, warn_only=True)
+    if hasattr(torch.backends, "cudnn"):
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+
+def worker_init_fn(worker_id: int) -> None:
+    seed = torch.initial_seed() % (2**32)
+    np.random.seed(seed)
+    random.seed(seed)
+
+
+def save_checkpoint(state: Any, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(state, path)
+
+
+def load_checkpoint_cpu(path: Path) -> Any:
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    try:
+        return torch.load(path, map_location="cpu", weights_only=True)
+    except TypeError:
+        return torch.load(path, map_location="cpu")
+
+
+def move_state_to_device(state: Any, device: torch.device) -> Any:
+    if isinstance(state, torch.Tensor):
+        return state.to(device)
+    if isinstance(state, dict):
+        return {
+            key: move_state_to_device(value, device) for key, value in state.items()
+        }
+    if isinstance(state, list):
+        return [move_state_to_device(value, device) for value in state]
+    if isinstance(state, tuple):
+        return tuple(move_state_to_device(value, device) for value in state)
+    return state
+
+#########----------------------------------------------------------------------#######
+#########----------src/blockchain/blocks---------------------------------------#######
+"""Compatibility export for block records."""
+
+from src.blockchain.permissioned_ledger import Block
+
+__all__ = ["Block"]
+#########----------------------------------------------------------------------#######
+#########----------src/blockchain/consensus---------------------------------------#######
+"""Compatibility export for consensus errors."""
+
+from src.blockchain.permissioned_ledger import ConsensusError
+
+__all__ = ["ConsensusError"]
+
+#########----------------------------------------------------------------------#######
+#########----------src/blockchain/identity---------------------------------------#######
+"""Ed25519 identities for federated clients and validators."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+def _backend():
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+        return Ed25519PrivateKey
+    except ImportError as exc:
+        raise ImportError(
+            "Ed25519 support requires the 'cryptography' package"
+        ) from exc
+
+
+@dataclass
+class Identity:
+    name: str
+    private_key: object
+
+    @classmethod
+    def generate(cls, name: str) -> "Identity":
+        return cls(name, _backend().generate())
+
+    @property
+    def public_key(self) -> object:
+        return self.private_key.public_key()
+
+    def sign(self, message: bytes) -> bytes:
+        return self.private_key.sign(message)
+
+    def verify(self, message: bytes, signature: bytes) -> bool:
+        try:
+            self.public_key.verify(signature, message)
+            return True
+        except Exception:
+            return False
+
+    @property
+    def public_hex(self) -> str:
+        return public_hex(self.public_key)
+
+    def private_hex(self) -> str:
+        from cryptography.hazmat.primitives import serialization
+
+        return self.private_key.private_bytes(
+            serialization.Encoding.Raw,
+            serialization.PrivateFormat.Raw,
+            serialization.NoEncryption(),
+        ).hex()
+
+    @classmethod
+    def from_private_hex(cls, name: str, value: str) -> "Identity":
+        return cls(name, _backend().from_private_bytes(bytes.fromhex(value)))
+
+
+def public_hex(public_key: object) -> str:
+    from cryptography.hazmat.primitives import serialization
+
+    return public_key.public_bytes(
+        serialization.Encoding.Raw, serialization.PublicFormat.Raw
+    ).hex()
+
+
+def verify_with_public_hex(
+    public_key_hex: str, message: bytes, signature_hex: str
+) -> bool:
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+    try:
+        Ed25519PublicKey.from_public_bytes(bytes.fromhex(public_key_hex)).verify(
+            bytes.fromhex(signature_hex), message
+        )
+        return True
+    except Exception:
+        return False
+
+
+
+#########----------------------------------------------------------------------#######
+#########----------src/blockchain/overhead---------------------------------------#######
+"""Microbenchmarks kept separate from model-training runtime."""
+
+from __future__ import annotations
+
+import hashlib
+import time
+import pandas as pd
+
+from src.blockchain.identity import Identity
+from src.blockchain.permissioned_ledger import PermissionedLedger
+
+
+def benchmark(
+    sizes: tuple[int, ...] = (100, 1000, 10000),
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    identity = Identity.generate("benchmark")
+    rows, growth = [], []
+    for size in sizes:
+        payload = b"x" * size
+        start = time.perf_counter()
+        hashlib.sha256(payload).hexdigest()
+        hashing = time.perf_counter() - start
+        start = time.perf_counter()
+        signature = identity.sign(payload)
+        signing = time.perf_counter() - start
+        start = time.perf_counter()
+        identity.verify(payload, signature)
+        verification = time.perf_counter() - start
+        ledger = PermissionedLedger()
+        start = time.perf_counter()
+        for index in range(size):
+            ledger.append(index, hashlib.sha256(str(index).encode()).hexdigest())
+        consensus = time.perf_counter() - start
+        rows.append(
+            {
+                "transactions": size,
+                "sha256_seconds": hashing,
+                "signing_seconds": signing,
+                "verification_seconds": verification,
+                "consensus_seconds": consensus,
+            }
+        )
+        growth.append(
+            {"transactions": size, "ledger_bytes": len(str(ledger.blocks).encode())}
+        )
+    return pd.DataFrame(rows), pd.DataFrame(growth)
+
+########----------------------------------------------------------------------#######
+#######----------src/blockchain/permissioned_ledger---------------------------#######
+"""Replicated majority-finality ledger for experiment commitments."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import time
+from dataclasses import asdict, dataclass
+from typing import Any
+
+
+@dataclass(frozen=True)
+class Block:
+    block_id: int
+    timestamp: float
+    round_id: int
+    previous_hash: str
+    transaction_hash: str
+    validator_votes: tuple[str, ...]
+    block_hash: str
+
+
+class ConsensusError(RuntimeError):
+    """Raised when validators do not reach majority finality."""
+
+
+class PermissionedLedger:
+    def __init__(
+        self,
+        validators: tuple[str, ...] = ("validator_1", "validator_2", "validator_3"),
+        majority: int = 2,
+    ):
+        if majority <= len(validators) // 2 or majority > len(validators):
+            raise ValueError("majority must be strict and attainable")
+        self.validators = validators
+        self.majority = majority
+        self.blocks: list[Block] = []
+        self.replicas = {validator: [] for validator in validators}
+
+    @staticmethod
+    def _hash(payload: dict[str, Any]) -> str:
+        return hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+
+    def append(
+        self, round_id: int, transaction_hash: str, votes: tuple[str, ...] | None = None
+    ) -> Block:
+        votes = votes or self.validators
+        valid_votes = tuple(
+            validator for validator in votes if validator in self.validators
+        )
+        if len(valid_votes) < self.majority:
+            raise ConsensusError("validator majority was not reached")
+        previous = self.blocks[-1].block_hash if self.blocks else "0" * 64
+        payload = {
+            "block_id": len(self.blocks),
+            "timestamp": time.time(),
+            "round_id": round_id,
+            "previous_hash": previous,
+            "transaction_hash": transaction_hash,
+            "validator_votes": valid_votes,
+        }
+        block = Block(**payload, block_hash=self._hash(payload))
+        self.blocks.append(block)
+        for replica in self.replicas.values():
+            replica.append(block)
+        return block
+
+    @staticmethod
+    def sign(identity, round_id: int, client_id, digest: str) -> str:
+        return identity.sign(digest.encode()).hex()
+
+    def record_update(
+        self, round_id: int, client_id, update_digest: str, signature_hex: str
+    ) -> Block:
+        return self.append(round_id, update_digest)
+
+    def record_round(self, round_id: int, commitment: dict) -> None:
+        """Digest-only ledgers keep no per-round commitment."""
+
+    @classmethod
+    def from_blocks(cls, items, validators, majority) -> "PermissionedLedger":
+        ledger = cls(validators, majority)
+        for item in items:
+            block = Block(**{**item, "validator_votes": tuple(item["validator_votes"])})
+            ledger.blocks.append(block)
+            for replica in ledger.replicas.values():
+                replica.append(block)
+        if not ledger.validate():
+            raise ConsensusError("Restored ledger failed validation")
+        return ledger
+
+    def to_blocks(self) -> list[dict[str, Any]]:
+        return [asdict(block) for block in self.blocks]
+
+    def validate(self) -> bool:
+        previous = "0" * 64
+        for index, block in enumerate(self.blocks):
+            payload = asdict(block)
+            actual = payload.pop("block_hash")
+            if (
+                actual != self._hash(payload)
+                or block.block_id != index
+                or block.previous_hash != previous
+            ):
+                return False
+            previous = block.block_hash
+        return all(replica == self.blocks for replica in self.replicas.values())
+
+    def save(self, path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps([asdict(block) for block in self.blocks], indent=2, default=list)
+            + "\n"
+        )
+
+########----------------------------------------------------------------------########
+########----------src/blockchain/secure_ledger--------------------------------#######
+"""Signed permissioned ledger: client signatures are verified before commitment and
+validator votes are Ed25519 signatures over the block hash."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import time
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any, Mapping
+
+from src.blockchain.identity import Identity, verify_with_public_hex
+from src.blockchain.permissioned_ledger import ConsensusError
+
+
+class SignatureError(ConsensusError):
+    """Raised when a submitted client signature does not verify."""
+
+
+@dataclass(frozen=True)
+class SecureBlock:
+    block_id: int
+    timestamp: float
+    round_id: int
+    kind: str
+    subject: str
+    previous_hash: str
+    body: dict
+    block_hash: str
+    validator_votes: tuple
+
+
+def _hash(payload: dict[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
+def update_message(round_id: int, client_id: str, digest: str) -> bytes:
+    return f"{round_id}|{client_id}|{digest}".encode()
+
+
+class SecureLedger:
+    def __init__(
+        self,
+        validator_keys: Mapping[str, str],
+        client_keys: Mapping[str, str],
+        majority: int,
+        signers: Mapping[str, Identity] | None = None,
+    ):
+        if majority <= len(validator_keys) // 2 or majority > len(validator_keys):
+            raise ValueError("majority must be strict and attainable")
+        self.validator_keys = dict(validator_keys)
+        self.client_keys = {str(k): v for k, v in client_keys.items()}
+        self.majority = majority
+        self.signers = dict(signers or {})
+        self.blocks: list[SecureBlock] = []
+        self.replicas: dict[str, list[SecureBlock]] = {v: [] for v in validator_keys}
+
+    @staticmethod
+    def sign(identity: Identity, round_id: int, client_id, digest: str) -> str:
+        return identity.sign(update_message(round_id, str(client_id), digest)).hex()
+
+    def _payload(self, round_id, kind, subject, body, previous) -> dict[str, Any]:
+        return {
+            "block_id": len(self.blocks),
+            "timestamp": time.time(),
+            "round_id": round_id,
+            "kind": kind,
+            "subject": subject,
+            "previous_hash": previous,
+            "body": body,
+        }
+
+    def _finalize(
+        self, round_id: int, kind: str, subject: str, body: dict
+    ) -> SecureBlock:
+        previous = self.blocks[-1].block_hash if self.blocks else "0" * 64
+        payload = self._payload(round_id, kind, subject, body, previous)
+        block_hash = _hash(payload)
+        votes = tuple(
+            (name, signer.sign(block_hash.encode()).hex())
+            for name, signer in self.signers.items()
+            if name in self.validator_keys
+        )
+        if len(votes) < self.majority:
+            raise ConsensusError("validator majority was not reached")
+        block = SecureBlock(**payload, block_hash=block_hash, validator_votes=votes)
+        self.blocks.append(block)
+        for replica in self.replicas.values():
+            replica.append(block)
+        return block
+
+    def record_update(
+        self, round_id: int, client_id, update_digest: str, signature_hex: str
+    ) -> SecureBlock:
+        key = self.client_keys.get(str(client_id))
+        message = update_message(round_id, str(client_id), update_digest)
+        if key is None or not verify_with_public_hex(key, message, signature_hex):
+            raise SignatureError(f"invalid signature from client {client_id}")
+        return self._finalize(
+            round_id,
+            "client_update",
+            str(client_id),
+            {"update_digest": update_digest, "client_signature": signature_hex},
+        )
+
+    def record_round(self, round_id: int, commitment: dict) -> SecureBlock:
+        return self._finalize(round_id, "round_commitment", "aggregator", commitment)
+
+    def failures(self) -> list[str]:
+        problems, previous = [], "0" * 64
+        for index, block in enumerate(self.blocks):
+            payload = asdict(block)
+            actual = payload.pop("block_hash")
+            votes = payload.pop("validator_votes")
+            if actual != _hash(payload):
+                problems.append(f"block {index}: hash mismatch")
+            if block.block_id != index:
+                problems.append(f"block {index}: wrong block_id")
+            if block.previous_hash != previous:
+                problems.append(f"block {index}: broken chain")
+            previous = block.block_hash
+            valid = {
+                name
+                for name, signature in votes
+                if name in self.validator_keys
+                and verify_with_public_hex(
+                    self.validator_keys[name], block.block_hash.encode(), signature
+                )
+            }
+            if len(valid) < self.majority:
+                problems.append(f"block {index}: fewer than majority valid votes")
+            if block.kind == "client_update":
+                key = self.client_keys.get(block.subject)
+                message = update_message(
+                    block.round_id, block.subject, block.body.get("update_digest", "")
+                )
+                if key is None or not verify_with_public_hex(
+                    key, message, block.body.get("client_signature", "")
+                ):
+                    problems.append(f"block {index}: invalid client signature")
+        if any(replica != self.blocks for replica in self.replicas.values()):
+            problems.append("replica divergence")
+        return problems
+
+    def validate(self) -> bool:
+        return not self.failures()
+
+    def registry(self) -> dict[str, Any]:
+        return {
+            "validators": self.validator_keys,
+            "clients": self.client_keys,
+            "majority": self.majority,
+        }
+
+    def to_blocks(self) -> list[dict[str, Any]]:
+        return [asdict(block) for block in self.blocks]
+
+    @classmethod
+    def from_blocks(
+        cls,
+        items,
+        registry: Mapping[str, Any],
+        signers: Mapping[str, Identity] | None = None,
+    ) -> "SecureLedger":
+        ledger = cls(
+            registry["validators"], registry["clients"], registry["majority"], signers
+        )
+        for item in items:
+            votes = tuple(
+                (name, signature) for name, signature in item["validator_votes"]
+            )
+            block = SecureBlock(**{**item, "validator_votes": votes})
+            ledger.blocks.append(block)
+            for replica in ledger.replicas.values():
+                replica.append(block)
+        problems = ledger.failures()
+        if problems:
+            raise ConsensusError(f"Restored ledger failed validation: {problems[:3]}")
+        return ledger
+
+    def save(self, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(self.to_blocks(), indent=2, default=list) + "\n")
+        path.with_name(path.stem + "_registry.json").write_text(
+            json.dumps(self.registry(), indent=2) + "\n"
+        )
+
+#########----------------------------------------------------------------------########
+########----------src/blockchain/transactions----------------------------------########
+"""Deterministic model-update serialization and signed transactions."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import asdict, dataclass
+from typing import Any
+
+import numpy as np
+
+from src.blockchain.identity import Identity
+
+
+def serialize_update(update: Any) -> bytes:
+    if isinstance(update, dict):
+        return (
+            b"{"
+            + b";".join(
+                key.encode() + b":" + serialize_update(update[key])
+                for key in sorted(update)
+            )
+            + b"}"
+        )
+    if hasattr(update, "detach"):
+        value = update.detach().cpu().contiguous().numpy()
+        return (
+            b"tensor:"
+            + str(value.dtype).encode()
+            + b":"
+            + repr(tuple(value.shape)).encode()
+            + b":"
+            + value.tobytes()
+        )
+    if isinstance(update, np.ndarray):
+        return (
+            b"array:"
+            + str(update.dtype).encode()
+            + b":"
+            + repr(tuple(update.shape)).encode()
+            + b":"
+            + update.tobytes()
+        )
+    return json.dumps(update, sort_keys=True, separators=(",", ":")).encode()
+
+
+def update_digest(update: Any) -> str:
+    return hashlib.sha256(serialize_update(update)).hexdigest()
+
+
+@dataclass(frozen=True)
+class Transaction:
+    round_id: int
+    client_id: str
+    update_digest: str
+    signature: str
+
+
+def sign_update(
+    identity: Identity, round_id: int, client_id: str, update: Any
+) -> Transaction:
+    digest = update_digest(update)
+    signature = identity.sign(digest.encode()).hex()
+    return Transaction(round_id, client_id, digest, signature)
+
+
+def verify_transaction(transaction: Transaction, identity: Identity) -> bool:
+    return identity.verify(
+        transaction.update_digest.encode(), bytes.fromhex(transaction.signature)
+    )
+
+########----------------------------------------------------------------------######
+########----------src/blockchain/validation-----------------------------------######
+"""Ledger, replication, block-mutation, and signature-substitution checks."""
+
+from __future__ import annotations
+
+import copy
+import pandas as pd
+
+from src.blockchain.identity import Identity
+from src.blockchain.permissioned_ledger import PermissionedLedger
+from src.blockchain.transactions import sign_update, verify_transaction
+
+
+def run_validation_suite(progress: bool = True) -> pd.DataFrame:
+    def report(message: str) -> None:
+        if progress:
+            print(f"[P1-07] {message}", flush=True)
+
+    report("Starting ledger replication check")
+    ledger = PermissionedLedger()
+    ledger.append(1, "a" * 64)
+    rows = [
+        {
+            "check": "ledger_replication",
+            "status": "PASS" if ledger.validate() else "FAIL",
+        }
+    ]
+    report(f"Ledger replication check: {rows[-1]['status']}")
+    report("Starting block mutation check")
+    mutated = copy.deepcopy(ledger)
+    mutated.blocks[0] = mutated.blocks[0].__class__(
+        **{**mutated.blocks[0].__dict__, "transaction_hash": "b" * 64}
+    )
+    rows.append(
+        {
+            "check": "block_mutation",
+            "status": "PASS" if not mutated.validate() else "FAIL",
+        }
+    )
+    report(f"Block mutation check: {rows[-1]['status']}")
+    report("Starting signature substitution check")
+    identity = Identity.generate("client_1")
+    other = Identity.generate("client_2")
+    transaction = sign_update(identity, 1, "client_1", {"weight": [1, 2, 3]})
+    rows.append(
+        {
+            "check": "signature_substitution",
+            "status": "PASS" if not verify_transaction(transaction, other) else "FAIL",
+        }
+    )
+    report(f"Signature substitution check: {rows[-1]['status']}")
+    report(f"Completed {len(rows)} blockchain validation checks")
+    return pd.DataFrame(rows)
+
+#########----------------------------------------------------------------------#######
+#########----------src/blockchain/validator------------------------------------#######
+"""Validator identity compatibility layer."""
+
+from src.blockchain.identity import Identity
+
+__all__ = ["Identity"]
