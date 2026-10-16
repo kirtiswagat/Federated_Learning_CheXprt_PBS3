@@ -1,0 +1,77 @@
+{
+  "blockchain": {
+    "majority": 2,
+    "validators": [
+      "validator_1",
+      "validator_2",
+      "validator_3"
+    ]
+  },
+  "dataset": {
+    "frontal_only": true,
+    "labels": [
+      "No Finding",
+      "Enlarged Cardiomediastinum",
+      "Cardiomegaly",
+      "Lung Opacity",
+      "Lung Lesion",
+      "Edema",
+      "Consolidation",
+      "Pneumonia",
+      "Atelectasis",
+      "Pneumothorax",
+      "Pleural Effusion",
+      "Pleural Other",
+      "Fracture",
+      "Support Devices"
+    ],
+    "uncertain_policy": "zero"
+  },
+  "federated": {
+    "clients": 5,
+    "dirichlet_alpha": null,
+    "fedprox_mu": 0.001,
+    "method": "FedAvg",
+    "partition": "iid",
+    "rounds": 10
+  },
+  "model": {
+    "backbone": "resnet50",
+    "dropout": 0.3,
+    "image_size": [
+      320,
+      320
+    ],
+    "num_labels": 14,
+    "pretrained": true
+  },
+  "paths": {
+    "output_dir": "/Users/e689452/Documents/PhD/Problem_Statement_2/Scientific_Report_Feedback/Revision_Scientific_Report/Output/p1_critical_revision/runs",
+    "root": "/Users/e689452/Documents/PhD/Problem_Statement_2/Scientific_Report_Feedback/Revision_Scientific_Report",
+    "train_csv": "/Users/e689452/Documents/PhD/Problem_Statement_2/Scientific_Report_Feedback/Revision_Scientific_Report/train.csv",
+    "valid_csv": "/Users/e689452/Documents/PhD/Problem_Statement_2/Scientific_Report_Feedback/Revision_Scientific_Report/valid.csv"
+  },
+  "runtime": {
+    "allow_mps": true,
+    "device": "mps",
+    "num_workers": 0,
+    "prefer_cuda": false,
+    "require_cuda": false,
+    "require_mps": true
+  },
+  "statistics": {
+    "bootstrap_iterations": 2000,
+    "confidence_level": 0.95,
+    "correction": "benjamini-hochberg"
+  },
+  "training": {
+    "batch_size": 16,
+    "learning_rate": 0.0001,
+    "local_epochs": 1,
+    "optimizer": "AdamW",
+    "precision": "fp32",
+    "seed": 42,
+    "threshold": 0.5,
+    "weight_decay": 1e-05
+  }
+}

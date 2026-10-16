@@ -1,0 +1,14 @@
+{
+  "run_id": "R06",
+  "algorithm": "FedAvg",
+  "partition": "iid",
+  "clients": 10,
+  "rounds": 10,
+  "alpha": null,
+  "participation_rate": 1.0,
+  "mu": 0.0,
+  "uncertainty_policy": "zero",
+  "uncertainty_mapping": [],
+  "status": "configuration_ready",
+  "training_adapter_required": true
+}

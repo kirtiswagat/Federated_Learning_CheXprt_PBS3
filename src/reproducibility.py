@@ -1,4 +1,3 @@
-#########----------src/Reproducibility-----------------------------------------#########
 """Deterministic setup and portable checkpoint helpers."""
 
 from __future__ import annotations

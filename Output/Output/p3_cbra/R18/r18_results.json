@@ -1,0 +1,18 @@
+{
+  "run_id": "R18",
+  "variant": "drift_disabled",
+  "alpha_n": 1.0,
+  "beta_q": 1.0,
+  "gamma_d": 0.0,
+  "final_metrics": {
+    "round": 5.0,
+    "macro_auroc": 0.7903585998571907,
+    "macro_auprc": 0.3899372206206957,
+    "sensitivity": 0.5256469520562164,
+    "specificity": 0.8261747730057712,
+    "ppv": 0.3755438331479027,
+    "npv": 0.9236785427389684,
+    "f1": 0.3945965602421265,
+    "accuracy": 0.8289517696005291
+  }
+}

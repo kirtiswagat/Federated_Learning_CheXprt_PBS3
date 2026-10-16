@@ -1,0 +1,29 @@
+split,label,positive,negative,uncertain,missing,observed_classes
+train,No Finding,22381,0,0,201033,22381
+train,Enlarged Cardiomediastinum,10798,21638,12403,178575,32436
+train,Cardiomegaly,27000,11116,8087,177211,38116
+train,Lung Opacity,105581,6599,5598,105636,112180
+train,Lung Lesion,9186,1270,1488,211470,10456
+train,Edema,52246,20726,12984,137458,72972
+train,Consolidation,14783,28097,27742,152792,42880
+train,Pneumonia,6039,2799,18770,195806,8838
+train,Atelectasis,33376,1328,33739,154971,34704
+train,Pneumothorax,19448,56341,3145,144480,75789
+train,Pleural Effusion,86187,35396,11628,90203,121583
+train,Pleural Other,3523,316,2653,216922,3839
+train,Fracture,9040,2512,642,211220,11552
+train,Support Devices,116001,6137,1079,100197,122138
+valid,No Finding,38,196,0,0,234
+valid,Enlarged Cardiomediastinum,109,125,0,0,234
+valid,Cardiomegaly,68,166,0,0,234
+valid,Lung Opacity,126,108,0,0,234
+valid,Lung Lesion,1,233,0,0,234
+valid,Edema,45,189,0,0,234
+valid,Consolidation,33,201,0,0,234
+valid,Pneumonia,8,226,0,0,234
+valid,Atelectasis,80,154,0,0,234
+valid,Pneumothorax,8,226,0,0,234
+valid,Pleural Effusion,67,167,0,0,234
+valid,Pleural Other,1,233,0,0,234
+valid,Fracture,0,234,0,0,234
+valid,Support Devices,107,127,0,0,234

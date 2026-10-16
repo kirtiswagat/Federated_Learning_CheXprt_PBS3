@@ -1,0 +1,4 @@
+{
+  "device_type": "mps",
+  "torch": "2.14.1"
+}

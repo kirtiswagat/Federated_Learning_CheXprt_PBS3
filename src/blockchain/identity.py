@@ -1,5 +1,3 @@
-#########----------------------------------------------------------------------#######
-#########----------src/blockchain/identity---------------------------------------#######
 """Ed25519 identities for federated clients and validators."""
 
 from __future__ import annotations

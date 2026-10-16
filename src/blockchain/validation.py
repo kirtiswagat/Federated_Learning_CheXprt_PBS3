@@ -1,5 +1,3 @@
-########----------------------------------------------------------------------######
-########----------src/blockchain/validation-----------------------------------######
 """Ledger, replication, block-mutation, and signature-substitution checks."""
 
 from __future__ import annotations

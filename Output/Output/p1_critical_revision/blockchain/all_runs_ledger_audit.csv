@@ -1,0 +1,14 @@
+run,blocks,chain_and_replicas_valid,summary_digests,digests_match_ledger,min_votes
+R01,50,True,50,True,3
+R02,25,True,25,True,3
+R03,25,True,25,True,3
+R04,25,True,25,True,3
+R05,25,True,25,True,3
+R12,25,True,25,True,3
+R13,25,True,25,True,3
+R14,25,True,25,True,3
+R15,25,True,25,True,3
+R16,25,True,25,True,3
+R17,25,True,25,True,3
+R18,25,True,25,True,3
+R19,25,True,25,True,3

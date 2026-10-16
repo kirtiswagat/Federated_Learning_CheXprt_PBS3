@@ -1,5 +1,3 @@
-##########----------------------------------------------------------------------#######
-#########----------src/config-------------------------------------------------#######
 """Frozen, serializable configuration for the P1 experiments."""
 
 from __future__ import annotations
@@ -208,4 +206,3 @@ def run_configs(root: Path) -> Mapping[str, ExperimentConfig]:
     return MappingProxyType(
         {run_id: replace(base, federated=config) for run_id, config in values.items()}
     )
-    

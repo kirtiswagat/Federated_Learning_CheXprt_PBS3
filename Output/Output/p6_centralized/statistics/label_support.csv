@@ -1,0 +1,15 @@
+label,positives,negatives,patients_with_positive,auroc_defined,low_support
+No Finding,3355,34656,2739,True,False
+Enlarged Cardiomediastinum,1854,36157,1412,True,False
+Cardiomegaly,4589,33422,2300,True,False
+Lung Opacity,18677,19334,7230,True,False
+Lung Lesion,1399,36612,981,True,False
+Edema,9799,28212,3918,True,False
+Consolidation,2605,35406,1673,True,False
+Pneumonia,960,37051,805,True,False
+Atelectasis,5741,32270,3570,True,False
+Pneumothorax,3713,34298,1411,True,False
+Pleural Effusion,15311,22700,5248,True,False
+Pleural Other,485,37526,365,True,False
+Fracture,1514,36497,1015,True,False
+Support Devices,21448,16563,6872,True,False

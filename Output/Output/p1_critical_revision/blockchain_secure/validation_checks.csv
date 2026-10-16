@@ -1,0 +1,11 @@
+check,expected,outcome
+honest_round_validates,ledger valid,PASS
+replication_and_restore,restored ledger valid,PASS
+block_mutation,detected,PASS
+client_signature_substitution,rejected before commitment,PASS
+cross_round_replay,rejected,PASS
+unsigned_update_substitution,rejected,PASS
+forged_validator_votes,detected,PASS
+single_compromised_validator,detected (minority of valid votes),PASS
+post_signing_update_tampering,received update digest differs from the committed digest,PASS
+untampered_update_matches_commitment,digest equal,PASS

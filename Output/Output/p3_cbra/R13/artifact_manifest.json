@@ -1,0 +1,115 @@
+{
+  "artifacts": [
+    {
+      "name": "aggregation_details.csv",
+      "sha256": "80951737984229a638ed837839e051968efb9026705ee0c570eddfd9525f920c",
+      "size": 3427
+    },
+    {
+      "name": "best_valid_predictions.csv",
+      "sha256": "702fd56a7204fecbddcbb0eb7fc96caf0e19d709e97ddb0714f571dfe185404a",
+      "size": 10907122
+    },
+    {
+      "name": "blockchain_commitment_summary.csv",
+      "sha256": "c0c836958544371c7d2bac07bf5550c2024d6dfa4d20aff5408e35f7f4bdba21",
+      "size": 1758
+    },
+    {
+      "name": "cbra_round_details.csv",
+      "sha256": "80951737984229a638ed837839e051968efb9026705ee0c570eddfd9525f920c",
+      "size": 3427
+    },
+    {
+      "name": "cbra_weights.csv",
+      "sha256": "80951737984229a638ed837839e051968efb9026705ee0c570eddfd9525f920c",
+      "size": 3427
+    },
+    {
+      "name": "checkpoint.pt",
+      "sha256": "ffe5f1e7e1ff0c80682b76bad699fd78c7230ac0f0c0fae33c430552e31e8fc8",
+      "size": 94457065
+    },
+    {
+      "name": "client_round_details.csv",
+      "sha256": "96ea861ba5c10e7c309d582ac9bd27e295ca37a1ad7e81b8f7971eaaff5245b1",
+      "size": 727
+    },
+    {
+      "name": "endpoint_macro_metrics.csv",
+      "sha256": "7c388cb241429bc3ccf8e25ad84ebb00aa25d29ad679d409f82ee46a1c1857c7",
+      "size": 217
+    },
+    {
+      "name": "endpoint_model.pt",
+      "sha256": "ffe5f1e7e1ff0c80682b76bad699fd78c7230ac0f0c0fae33c430552e31e8fc8",
+      "size": 94457065
+    },
+    {
+      "name": "endpoint_per_label_metrics.csv",
+      "sha256": "3053ad0c462552787cb3109975f31f547d2641c49aaa03864489a0531d4f48a8",
+      "size": 2506
+    },
+    {
+      "name": "endpoint_valid_predictions.csv",
+      "sha256": "702fd56a7204fecbddcbb0eb7fc96caf0e19d709e97ddb0714f571dfe185404a",
+      "size": 10907122
+    },
+    {
+      "name": "environment_report.json",
+      "sha256": "c47dfef01f0142e01ed01a5753b5cdb7847d012295b8ef81fc177291ac80b821",
+      "size": 48
+    },
+    {
+      "name": "ledger.json",
+      "sha256": "a11efa2e6ae657303639774317626adac8ed4184165598f65484c78d20aab2ba",
+      "size": 11092
+    },
+    {
+      "name": "macro_metrics.csv",
+      "sha256": "7c388cb241429bc3ccf8e25ad84ebb00aa25d29ad679d409f82ee46a1c1857c7",
+      "size": 217
+    },
+    {
+      "name": "per_label_metrics.csv",
+      "sha256": "3053ad0c462552787cb3109975f31f547d2641c49aaa03864489a0531d4f48a8",
+      "size": 2506
+    },
+    {
+      "name": "r13_results.json",
+      "sha256": "4736192fda924f40a6b902fe9c5a7bda10ff32c8cb3d22a5fa97f119aacd4d6b",
+      "size": 423
+    },
+    {
+      "name": "resume_checkpoint.pt",
+      "sha256": "8cf3d1f0ff1947e3a9f50be6d9d346ac7500b8194070ec3724c36199ff145333",
+      "size": 94511885
+    },
+    {
+      "name": "round_history.csv",
+      "sha256": "fcb67f036234c24f0f4f02f16317b6208e541d59dcae283f3d91f3c8d80d1cf9",
+      "size": 845
+    },
+    {
+      "name": "runtime_breakdown.csv",
+      "sha256": "e1d0327fad26eb6c61a906fecf4afe1a6ecce88ad4415ce4c0fc1df1e17d23e3",
+      "size": 12972
+    },
+    {
+      "name": "training_config.json",
+      "sha256": "dfeadf67484f0a844e85a15aca9fd94377a273214c74ec1997bb86ff143dcc33",
+      "size": 1906
+    },
+    {
+      "name": "training_summary.csv",
+      "sha256": "fcb67f036234c24f0f4f02f16317b6208e541d59dcae283f3d91f3c8d80d1cf9",
+      "size": 845
+    }
+  ],
+  "config_checksum": "dfeadf67484f0a844e85a15aca9fd94377a273214c74ec1997bb86ff143dcc33",
+  "device_type": "mps",
+  "endpoint_model_checksum": "ffe5f1e7e1ff0c80682b76bad699fd78c7230ac0f0c0fae33c430552e31e8fc8",
+  "run_id": "R13",
+  "source_stage": "P3",
+  "validation_cohort_checksum": "702fd56a7204fecbddcbb0eb7fc96caf0e19d709e97ddb0714f571dfe185404a"
+}

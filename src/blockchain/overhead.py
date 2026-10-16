@@ -1,5 +1,3 @@
-#########----------------------------------------------------------------------#######
-#########----------src/blockchain/overhead---------------------------------------#######
 """Microbenchmarks kept separate from model-training runtime."""
 
 from __future__ import annotations
@@ -46,4 +44,3 @@ def benchmark(
             {"transactions": size, "ledger_bytes": len(str(ledger.blocks).encode())}
         )
     return pd.DataFrame(rows), pd.DataFrame(growth)
-

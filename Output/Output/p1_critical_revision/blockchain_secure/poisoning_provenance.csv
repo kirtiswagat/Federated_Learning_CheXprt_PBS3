@@ -1,0 +1,7 @@
+attack,client,validly_signed_poisoned_update_accepted,post_signing_modification_detected
+label_flipping,0,True,True
+label_flipping,3,True,True
+label_flipping,4,True,True
+targeted_backdoor,0,True,True
+targeted_backdoor,3,True,True
+targeted_backdoor,4,True,True

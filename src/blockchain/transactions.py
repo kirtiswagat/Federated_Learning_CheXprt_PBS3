@@ -1,5 +1,3 @@
-#########----------------------------------------------------------------------########
-########----------src/blockchain/transactions----------------------------------########
 """Deterministic model-update serialization and signed transactions."""
 
 from __future__ import annotations
@@ -70,4 +68,3 @@ def verify_transaction(transaction: Transaction, identity: Identity) -> bool:
     return identity.verify(
         transaction.update_digest.encode(), bytes.fromhex(transaction.signature)
     )
-

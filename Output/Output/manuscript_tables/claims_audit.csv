@@ -1,0 +1,10 @@
+claim,evidence_file,observed,status
+Blockchain signing and consensus add negligible runtime,runtime/runtime_summary.csv,max ledger share 0.0091% of accounted time,supported
+"Label-skewed partitions reduce macro AUROC versus IID (FedAvg, round 5)",statistics/paired_comparisons.csv,"IID minus alpha=0.1 = +0.0119 [+0.0097, +0.0140]",supported
+FedProx improves over FedAvg under heterogeneity,statistics/paired_comparisons.csv,"FedAvg minus FedProx (alpha=0.1) = +0.0016 [+0.0003, +0.0028]",not supported: FedAvg is better
+CBRA improves macro AUROC over FedAvg,p3 statistics/paired_cbra_vs_baselines.csv,CBRA minus FedAvg ranges -0.0016 to +0.0030,"qualified: small gains (<= 0.003), single training seed; do not claim superiority"
+CBRA performance is insensitive to its hyperparameters,p3 cbra_parameter_sensitivity.csv,AUROC spread across 7 variants = 0.0046,supported (spread below 0.005)
+Robust aggregators resist Byzantine random updates,p4 robustness_degradation.csv,AUROC drop at 20%/40%: fedavg 0.225/0.226; norm_clipped_fedavg 0.029/0.040; coordinate_median 0.004/0.007; trimmed_mean -0.000/0.207,"partially supported: coordinate median and norm clipping hold, trimmed mean fails at 40%"
+Robust aggregators resist sign-flipping updates,p4 robustness_degradation.csv,AUROC drop at 20%/40%: fedavg 0.039/0.021; norm_clipped_fedavg 0.059/0.033; coordinate_median 0.052/0.107; trimmed_mean 0.050/0.109,not supported: robust aggregators are not better than FedAvg
+Robustness to label-flipping and backdoor attacks,p4 robustness_degradation.csv,these attacks leave the submitted update unchanged in the harness,not executed: do not report as measured
+The blockchain prevents model poisoning,threat_model.json,ledger records provenance only; no P4 condition enables it,not supported: excluded by the threat model

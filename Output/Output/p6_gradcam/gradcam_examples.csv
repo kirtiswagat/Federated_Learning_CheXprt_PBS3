@@ -1,0 +1,6 @@
+type,label,probability,path
+Label present,Cardiomegaly,0.9985343,CheXpert-v1.0-small/train/patient26704/study11/view1_frontal.jpg
+Label present,Pleural Effusion,0.9990872,CheXpert-v1.0-small/train/patient00134/study1/view1_frontal.jpg
+Label present,Pneumothorax,0.99989235,CheXpert-v1.0-small/train/patient29465/study3/view1_frontal.jpg
+Not recorded (U-Zero),Pneumothorax,0.99954635,CheXpert-v1.0-small/train/patient14124/study2/view1_frontal.jpg
+Not recorded (U-Zero),Cardiomegaly,0.99723226,CheXpert-v1.0-small/train/patient00532/study3/view1_frontal.jpg

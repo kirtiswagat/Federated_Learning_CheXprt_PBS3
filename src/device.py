@@ -1,5 +1,3 @@
-########----------------------------------------------------------------------#######
-########----------src/device--------------------------------------------------#######
 """Explicit device policy shared by training and verification jobs."""
 
 from __future__ import annotations
@@ -33,6 +31,3 @@ def resolve_mps(require_mps: bool = True) -> torch.device:
 def validate_device(device: torch.device, require_cuda: bool = False) -> None:
     if require_cuda and device.type != "cuda":
         raise RuntimeError(f"CUDA-designated job resolved to {device.type}")
-
-
-

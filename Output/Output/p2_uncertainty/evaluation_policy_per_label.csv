@@ -1,0 +1,547 @@
+run,policy,label,auroc,positives,negatives,uncertain_in_heldout
+R01_r5,u_zero,No Finding,0.87373,3355,34656,0
+R01_r5,u_zero,Enlarged Cardiomediastinum,0.69891,1854,36157,2085
+R01_r5,u_zero,Cardiomegaly,0.87352,4589,33422,1262
+R01_r5,u_zero,Lung Opacity,0.72548,18677,19334,906
+R01_r5,u_zero,Lung Lesion,0.79528,1399,36612,207
+R01_r5,u_zero,Edema,0.83465,9799,28212,2334
+R01_r5,u_zero,Consolidation,0.72509,2605,35406,4784
+R01_r5,u_zero,Pneumonia,0.7623,960,37051,3087
+R01_r5,u_zero,Atelectasis,0.69533,5741,32270,5917
+R01_r5,u_zero,Pneumothorax,0.88199,3713,34298,547
+R01_r5,u_zero,Pleural Effusion,0.86756,15311,22700,1912
+R01_r5,u_zero,Pleural Other,0.82684,485,37526,376
+R01_r5,u_zero,Fracture,0.78188,1514,36497,99
+R01_r5,u_zero,Support Devices,0.87359,21448,16563,207
+R01_r5,u_ignore,No Finding,0.87373,3355,34656,0
+R01_r5,u_ignore,Enlarged Cardiomediastinum,0.70254,1854,34072,2085
+R01_r5,u_ignore,Cardiomegaly,0.88022,4589,32160,1262
+R01_r5,u_ignore,Lung Opacity,0.72915,18677,18428,906
+R01_r5,u_ignore,Lung Lesion,0.79685,1399,36405,207
+R01_r5,u_ignore,Edema,0.85235,9799,25878,2334
+R01_r5,u_ignore,Consolidation,0.73717,2605,30622,4784
+R01_r5,u_ignore,Pneumonia,0.77884,960,33964,3087
+R01_r5,u_ignore,Atelectasis,0.72054,5741,26353,5917
+R01_r5,u_ignore,Pneumothorax,0.88435,3713,33751,547
+R01_r5,u_ignore,Pleural Effusion,0.87981,15311,20788,1912
+R01_r5,u_ignore,Pleural Other,0.82886,485,37150,376
+R01_r5,u_ignore,Fracture,0.78265,1514,36398,99
+R01_r5,u_ignore,Support Devices,0.87686,21448,16356,207
+R01_r5,u_one,No Finding,0.87373,3355,34656,0
+R01_r5,u_one,Enlarged Cardiomediastinum,0.63703,3939,34072,2085
+R01_r5,u_one,Cardiomegaly,0.8549,5851,32160,1262
+R01_r5,u_one,Lung Opacity,0.72276,19583,18428,906
+R01_r5,u_one,Lung Lesion,0.79634,1606,36405,207
+R01_r5,u_one,Edema,0.83524,12133,25878,2334
+R01_r5,u_one,Consolidation,0.66442,7389,30622,4784
+R01_r5,u_one,Pneumonia,0.72911,4047,33964,3087
+R01_r5,u_one,Atelectasis,0.68835,11658,26353,5917
+R01_r5,u_one,Pneumothorax,0.85727,4260,33751,547
+R01_r5,u_one,Pleural Effusion,0.86121,17223,20788,1912
+R01_r5,u_one,Pleural Other,0.7962,861,37150,376
+R01_r5,u_one,Fracture,0.7826,1613,36398,99
+R01_r5,u_one,Support Devices,0.87605,21655,16356,207
+R01_r10,u_zero,No Finding,0.87177,3355,34656,0
+R01_r10,u_zero,Enlarged Cardiomediastinum,0.68889,1854,36157,2085
+R01_r10,u_zero,Cardiomegaly,0.86857,4589,33422,1262
+R01_r10,u_zero,Lung Opacity,0.72404,18677,19334,906
+R01_r10,u_zero,Lung Lesion,0.79189,1399,36612,207
+R01_r10,u_zero,Edema,0.83337,9799,28212,2334
+R01_r10,u_zero,Consolidation,0.72372,2605,35406,4784
+R01_r10,u_zero,Pneumonia,0.74653,960,37051,3087
+R01_r10,u_zero,Atelectasis,0.69404,5741,32270,5917
+R01_r10,u_zero,Pneumothorax,0.87872,3713,34298,547
+R01_r10,u_zero,Pleural Effusion,0.86916,15311,22700,1912
+R01_r10,u_zero,Pleural Other,0.82386,485,37526,376
+R01_r10,u_zero,Fracture,0.77503,1514,36497,99
+R01_r10,u_zero,Support Devices,0.87612,21448,16563,207
+R01_r10,u_ignore,No Finding,0.87177,3355,34656,0
+R01_r10,u_ignore,Enlarged Cardiomediastinum,0.69226,1854,34072,2085
+R01_r10,u_ignore,Cardiomegaly,0.87552,4589,32160,1262
+R01_r10,u_ignore,Lung Opacity,0.72758,18677,18428,906
+R01_r10,u_ignore,Lung Lesion,0.79334,1399,36405,207
+R01_r10,u_ignore,Edema,0.85188,9799,25878,2334
+R01_r10,u_ignore,Consolidation,0.73711,2605,30622,4784
+R01_r10,u_ignore,Pneumonia,0.76152,960,33964,3087
+R01_r10,u_ignore,Atelectasis,0.72046,5741,26353,5917
+R01_r10,u_ignore,Pneumothorax,0.88103,3713,33751,547
+R01_r10,u_ignore,Pleural Effusion,0.88138,15311,20788,1912
+R01_r10,u_ignore,Pleural Other,0.82582,485,37150,376
+R01_r10,u_ignore,Fracture,0.77564,1514,36398,99
+R01_r10,u_ignore,Support Devices,0.87923,21448,16356,207
+R01_r10,u_one,No Finding,0.87177,3355,34656,0
+R01_r10,u_one,Enlarged Cardiomediastinum,0.62752,3939,34072,2085
+R01_r10,u_one,Cardiomegaly,0.85057,5851,32160,1262
+R01_r10,u_one,Lung Opacity,0.72126,19583,18428,906
+R01_r10,u_one,Lung Lesion,0.79136,1606,36405,207
+R01_r10,u_one,Edema,0.83556,12133,25878,2334
+R01_r10,u_one,Consolidation,0.66713,7389,30622,4784
+R01_r10,u_one,Pneumonia,0.70849,4047,33964,3087
+R01_r10,u_one,Atelectasis,0.69123,11658,26353,5917
+R01_r10,u_one,Pneumothorax,0.8541,4260,33751,547
+R01_r10,u_one,Pleural Effusion,0.86256,17223,20788,1912
+R01_r10,u_one,Pleural Other,0.78803,861,37150,376
+R01_r10,u_one,Fracture,0.77365,1613,36398,99
+R01_r10,u_one,Support Devices,0.87829,21655,16356,207
+R02,u_zero,No Finding,0.87277,3355,34656,0
+R02,u_zero,Enlarged Cardiomediastinum,0.69566,1854,36157,2085
+R02,u_zero,Cardiomegaly,0.87142,4589,33422,1262
+R02,u_zero,Lung Opacity,0.72562,18677,19334,906
+R02,u_zero,Lung Lesion,0.79176,1399,36612,207
+R02,u_zero,Edema,0.83434,9799,28212,2334
+R02,u_zero,Consolidation,0.72343,2605,35406,4784
+R02,u_zero,Pneumonia,0.75071,960,37051,3087
+R02,u_zero,Atelectasis,0.69435,5741,32270,5917
+R02,u_zero,Pneumothorax,0.8772,3713,34298,547
+R02,u_zero,Pleural Effusion,0.86684,15311,22700,1912
+R02,u_zero,Pleural Other,0.77367,485,37526,376
+R02,u_zero,Fracture,0.78517,1514,36497,99
+R02,u_zero,Support Devices,0.87462,21448,16563,207
+R02,u_ignore,No Finding,0.87277,3355,34656,0
+R02,u_ignore,Enlarged Cardiomediastinum,0.69917,1854,34072,2085
+R02,u_ignore,Cardiomegaly,0.87823,4589,32160,1262
+R02,u_ignore,Lung Opacity,0.72891,18677,18428,906
+R02,u_ignore,Lung Lesion,0.79333,1399,36405,207
+R02,u_ignore,Edema,0.85238,9799,25878,2334
+R02,u_ignore,Consolidation,0.73331,2605,30622,4784
+R02,u_ignore,Pneumonia,0.76397,960,33964,3087
+R02,u_ignore,Atelectasis,0.7196,5741,26353,5917
+R02,u_ignore,Pneumothorax,0.87952,3713,33751,547
+R02,u_ignore,Pleural Effusion,0.87887,15311,20788,1912
+R02,u_ignore,Pleural Other,0.77592,485,37150,376
+R02,u_ignore,Fracture,0.78599,1514,36398,99
+R02,u_ignore,Support Devices,0.87797,21448,16356,207
+R02,u_one,No Finding,0.87277,3355,34656,0
+R02,u_one,Enlarged Cardiomediastinum,0.63304,3939,34072,2085
+R02,u_one,Cardiomegaly,0.85268,5851,32160,1262
+R02,u_one,Lung Opacity,0.72222,19583,18428,906
+R02,u_one,Lung Lesion,0.7937,1606,36405,207
+R02,u_one,Edema,0.83547,12133,25878,2334
+R02,u_one,Consolidation,0.6535,7389,30622,4784
+R02,u_one,Pneumonia,0.69523,4047,33964,3087
+R02,u_one,Atelectasis,0.68786,11658,26353,5917
+R02,u_one,Pneumothorax,0.85224,4260,33751,547
+R02,u_one,Pleural Effusion,0.86007,17223,20788,1912
+R02,u_one,Pleural Other,0.76641,861,37150,376
+R02,u_one,Fracture,0.7868,1613,36398,99
+R02,u_one,Support Devices,0.87715,21655,16356,207
+R03,u_zero,No Finding,0.87294,3355,34656,0
+R03,u_zero,Enlarged Cardiomediastinum,0.69596,1854,36157,2085
+R03,u_zero,Cardiomegaly,0.87091,4589,33422,1262
+R03,u_zero,Lung Opacity,0.72601,18677,19334,906
+R03,u_zero,Lung Lesion,0.76812,1399,36612,207
+R03,u_zero,Edema,0.83467,9799,28212,2334
+R03,u_zero,Consolidation,0.72728,2605,35406,4784
+R03,u_zero,Pneumonia,0.74409,960,37051,3087
+R03,u_zero,Atelectasis,0.69129,5741,32270,5917
+R03,u_zero,Pneumothorax,0.881,3713,34298,547
+R03,u_zero,Pleural Effusion,0.86947,15311,22700,1912
+R03,u_zero,Pleural Other,0.71658,485,37526,376
+R03,u_zero,Fracture,0.77382,1514,36497,99
+R03,u_zero,Support Devices,0.8776,21448,16563,207
+R03,u_ignore,No Finding,0.87294,3355,34656,0
+R03,u_ignore,Enlarged Cardiomediastinum,0.70025,1854,34072,2085
+R03,u_ignore,Cardiomegaly,0.87782,4589,32160,1262
+R03,u_ignore,Lung Opacity,0.72943,18677,18428,906
+R03,u_ignore,Lung Lesion,0.7697,1399,36405,207
+R03,u_ignore,Edema,0.85345,9799,25878,2334
+R03,u_ignore,Consolidation,0.73982,2605,30622,4784
+R03,u_ignore,Pneumonia,0.75798,960,33964,3087
+R03,u_ignore,Atelectasis,0.71465,5741,26353,5917
+R03,u_ignore,Pneumothorax,0.88319,3713,33751,547
+R03,u_ignore,Pleural Effusion,0.88186,15311,20788,1912
+R03,u_ignore,Pleural Other,0.71883,485,37150,376
+R03,u_ignore,Fracture,0.77452,1514,36398,99
+R03,u_ignore,Support Devices,0.88072,21448,16356,207
+R03,u_one,No Finding,0.87294,3355,34656,0
+R03,u_one,Enlarged Cardiomediastinum,0.64151,3939,34072,2085
+R03,u_one,Cardiomegaly,0.85338,5851,32160,1262
+R03,u_one,Lung Opacity,0.72275,19583,18428,906
+R03,u_one,Lung Lesion,0.77192,1606,36405,207
+R03,u_one,Edema,0.83799,12133,25878,2334
+R03,u_one,Consolidation,0.66764,7389,30622,4784
+R03,u_one,Pneumonia,0.69607,4047,33964,3087
+R03,u_one,Atelectasis,0.68094,11658,26353,5917
+R03,u_one,Pneumothorax,0.85491,4260,33751,547
+R03,u_one,Pleural Effusion,0.8633,17223,20788,1912
+R03,u_one,Pleural Other,0.72388,861,37150,376
+R03,u_one,Fracture,0.77389,1613,36398,99
+R03,u_one,Support Devices,0.87984,21655,16356,207
+R04,u_zero,No Finding,0.87229,3355,34656,0
+R04,u_zero,Enlarged Cardiomediastinum,0.69364,1854,36157,2085
+R04,u_zero,Cardiomegaly,0.87162,4589,33422,1262
+R04,u_zero,Lung Opacity,0.72381,18677,19334,906
+R04,u_zero,Lung Lesion,0.79099,1399,36612,207
+R04,u_zero,Edema,0.83515,9799,28212,2334
+R04,u_zero,Consolidation,0.72047,2605,35406,4784
+R04,u_zero,Pneumonia,0.76394,960,37051,3087
+R04,u_zero,Atelectasis,0.69125,5741,32270,5917
+R04,u_zero,Pneumothorax,0.87874,3713,34298,547
+R04,u_zero,Pleural Effusion,0.86414,15311,22700,1912
+R04,u_zero,Pleural Other,0.82067,485,37526,376
+R04,u_zero,Fracture,0.77099,1514,36497,99
+R04,u_zero,Support Devices,0.86884,21448,16563,207
+R04,u_ignore,No Finding,0.87229,3355,34656,0
+R04,u_ignore,Enlarged Cardiomediastinum,0.69707,1854,34072,2085
+R04,u_ignore,Cardiomegaly,0.87827,4589,32160,1262
+R04,u_ignore,Lung Opacity,0.72726,18677,18428,906
+R04,u_ignore,Lung Lesion,0.79256,1399,36405,207
+R04,u_ignore,Edema,0.85315,9799,25878,2334
+R04,u_ignore,Consolidation,0.73183,2605,30622,4784
+R04,u_ignore,Pneumonia,0.78042,960,33964,3087
+R04,u_ignore,Atelectasis,0.71666,5741,26353,5917
+R04,u_ignore,Pneumothorax,0.88108,3713,33751,547
+R04,u_ignore,Pleural Effusion,0.8763,15311,20788,1912
+R04,u_ignore,Pleural Other,0.82284,485,37150,376
+R04,u_ignore,Fracture,0.77177,1514,36398,99
+R04,u_ignore,Support Devices,0.87211,21448,16356,207
+R04,u_one,No Finding,0.87229,3355,34656,0
+R04,u_one,Enlarged Cardiomediastinum,0.6313,3939,34072,2085
+R04,u_one,Cardiomegaly,0.85244,5851,32160,1262
+R04,u_one,Lung Opacity,0.72077,19583,18428,906
+R04,u_one,Lung Lesion,0.79292,1606,36405,207
+R04,u_one,Edema,0.83615,12133,25878,2334
+R04,u_one,Consolidation,0.65933,7389,30622,4784
+R04,u_one,Pneumonia,0.72916,4047,33964,3087
+R04,u_one,Atelectasis,0.68624,11658,26353,5917
+R04,u_one,Pneumothorax,0.85442,4260,33751,547
+R04,u_one,Pleural Effusion,0.85772,17223,20788,1912
+R04,u_one,Pleural Other,0.79621,861,37150,376
+R04,u_one,Fracture,0.77231,1613,36398,99
+R04,u_one,Support Devices,0.87131,21655,16356,207
+R05,u_zero,No Finding,0.87171,3355,34656,0
+R05,u_zero,Enlarged Cardiomediastinum,0.69546,1854,36157,2085
+R05,u_zero,Cardiomegaly,0.86968,4589,33422,1262
+R05,u_zero,Lung Opacity,0.7247,18677,19334,906
+R05,u_zero,Lung Lesion,0.77107,1399,36612,207
+R05,u_zero,Edema,0.8328,9799,28212,2334
+R05,u_zero,Consolidation,0.71993,2605,35406,4784
+R05,u_zero,Pneumonia,0.74497,960,37051,3087
+R05,u_zero,Atelectasis,0.68707,5741,32270,5917
+R05,u_zero,Pneumothorax,0.87687,3713,34298,547
+R05,u_zero,Pleural Effusion,0.86586,15311,22700,1912
+R05,u_zero,Pleural Other,0.72476,485,37526,376
+R05,u_zero,Fracture,0.76831,1514,36497,99
+R05,u_zero,Support Devices,0.8746,21448,16563,207
+R05,u_ignore,No Finding,0.87171,3355,34656,0
+R05,u_ignore,Enlarged Cardiomediastinum,0.69923,1854,34072,2085
+R05,u_ignore,Cardiomegaly,0.87632,4589,32160,1262
+R05,u_ignore,Lung Opacity,0.72787,18677,18428,906
+R05,u_ignore,Lung Lesion,0.77259,1399,36405,207
+R05,u_ignore,Edema,0.85141,9799,25878,2334
+R05,u_ignore,Consolidation,0.73226,2605,30622,4784
+R05,u_ignore,Pneumonia,0.75907,960,33964,3087
+R05,u_ignore,Atelectasis,0.70966,5741,26353,5917
+R05,u_ignore,Pneumothorax,0.87903,3713,33751,547
+R05,u_ignore,Pleural Effusion,0.87836,15311,20788,1912
+R05,u_ignore,Pleural Other,0.72715,485,37150,376
+R05,u_ignore,Fracture,0.76901,1514,36398,99
+R05,u_ignore,Support Devices,0.87779,21448,16356,207
+R05,u_one,No Finding,0.87171,3355,34656,0
+R05,u_one,Enlarged Cardiomediastinum,0.6369,3939,34072,2085
+R05,u_one,Cardiomegaly,0.85032,5851,32160,1262
+R05,u_one,Lung Opacity,0.72115,19583,18428,906
+R05,u_one,Lung Lesion,0.774,1606,36405,207
+R05,u_one,Edema,0.83602,12133,25878,2334
+R05,u_one,Consolidation,0.6627,7389,30622,4784
+R05,u_one,Pneumonia,0.70044,4047,33964,3087
+R05,u_one,Atelectasis,0.67606,11658,26353,5917
+R05,u_one,Pneumothorax,0.85113,4260,33751,547
+R05,u_one,Pleural Effusion,0.86018,17223,20788,1912
+R05,u_one,Pleural Other,0.73713,861,37150,376
+R05,u_one,Fracture,0.76806,1613,36398,99
+R05,u_one,Support Devices,0.87696,21655,16356,207
+R12,u_zero,No Finding,0.87415,3355,34656,0
+R12,u_zero,Enlarged Cardiomediastinum,0.69898,1854,36157,2085
+R12,u_zero,Cardiomegaly,0.8719,4589,33422,1262
+R12,u_zero,Lung Opacity,0.72682,18677,19334,906
+R12,u_zero,Lung Lesion,0.76776,1399,36612,207
+R12,u_zero,Edema,0.83406,9799,28212,2334
+R12,u_zero,Consolidation,0.72782,2605,35406,4784
+R12,u_zero,Pneumonia,0.74645,960,37051,3087
+R12,u_zero,Atelectasis,0.69113,5741,32270,5917
+R12,u_zero,Pneumothorax,0.88108,3713,34298,547
+R12,u_zero,Pleural Effusion,0.86922,15311,22700,1912
+R12,u_zero,Pleural Other,0.73346,485,37526,376
+R12,u_zero,Fracture,0.77451,1514,36497,99
+R12,u_zero,Support Devices,0.87683,21448,16563,207
+R12,u_ignore,No Finding,0.87415,3355,34656,0
+R12,u_ignore,Enlarged Cardiomediastinum,0.70313,1854,34072,2085
+R12,u_ignore,Cardiomegaly,0.87898,4589,32160,1262
+R12,u_ignore,Lung Opacity,0.73018,18677,18428,906
+R12,u_ignore,Lung Lesion,0.76934,1399,36405,207
+R12,u_ignore,Edema,0.85305,9799,25878,2334
+R12,u_ignore,Consolidation,0.74007,2605,30622,4784
+R12,u_ignore,Pneumonia,0.76023,960,33964,3087
+R12,u_ignore,Atelectasis,0.71405,5741,26353,5917
+R12,u_ignore,Pneumothorax,0.88326,3713,33751,547
+R12,u_ignore,Pleural Effusion,0.88167,15311,20788,1912
+R12,u_ignore,Pleural Other,0.73584,485,37150,376
+R12,u_ignore,Fracture,0.77523,1514,36398,99
+R12,u_ignore,Support Devices,0.87991,21448,16356,207
+R12,u_one,No Finding,0.87415,3355,34656,0
+R12,u_one,Enlarged Cardiomediastinum,0.64211,3939,34072,2085
+R12,u_one,Cardiomegaly,0.85485,5851,32160,1262
+R12,u_one,Lung Opacity,0.72342,19583,18428,906
+R12,u_one,Lung Lesion,0.77185,1606,36405,207
+R12,u_one,Edema,0.83799,12133,25878,2334
+R12,u_one,Consolidation,0.66661,7389,30622,4784
+R12,u_one,Pneumonia,0.69608,4047,33964,3087
+R12,u_one,Atelectasis,0.6793,11658,26353,5917
+R12,u_one,Pneumothorax,0.85511,4260,33751,547
+R12,u_one,Pleural Effusion,0.8634,17223,20788,1912
+R12,u_one,Pleural Other,0.73941,861,37150,376
+R12,u_one,Fracture,0.77489,1613,36398,99
+R12,u_one,Support Devices,0.87902,21655,16356,207
+R13,u_zero,No Finding,0.87272,3355,34656,0
+R13,u_zero,Enlarged Cardiomediastinum,0.69877,1854,36157,2085
+R13,u_zero,Cardiomegaly,0.87197,4589,33422,1262
+R13,u_zero,Lung Opacity,0.72654,18677,19334,906
+R13,u_zero,Lung Lesion,0.76706,1399,36612,207
+R13,u_zero,Edema,0.8334,9799,28212,2334
+R13,u_zero,Consolidation,0.72625,2605,35406,4784
+R13,u_zero,Pneumonia,0.74384,960,37051,3087
+R13,u_zero,Atelectasis,0.68912,5741,32270,5917
+R13,u_zero,Pneumothorax,0.87871,3713,34298,547
+R13,u_zero,Pleural Effusion,0.86872,15311,22700,1912
+R13,u_zero,Pleural Other,0.74164,485,37526,376
+R13,u_zero,Fracture,0.77485,1514,36497,99
+R13,u_zero,Support Devices,0.87634,21448,16563,207
+R13,u_ignore,No Finding,0.87272,3355,34656,0
+R13,u_ignore,Enlarged Cardiomediastinum,0.70276,1854,34072,2085
+R13,u_ignore,Cardiomegaly,0.87903,4589,32160,1262
+R13,u_ignore,Lung Opacity,0.73004,18677,18428,906
+R13,u_ignore,Lung Lesion,0.76861,1399,36405,207
+R13,u_ignore,Edema,0.85179,9799,25878,2334
+R13,u_ignore,Consolidation,0.739,2605,30622,4784
+R13,u_ignore,Pneumonia,0.75775,960,33964,3087
+R13,u_ignore,Atelectasis,0.71206,5741,26353,5917
+R13,u_ignore,Pneumothorax,0.88093,3713,33751,547
+R13,u_ignore,Pleural Effusion,0.88113,15311,20788,1912
+R13,u_ignore,Pleural Other,0.74388,485,37150,376
+R13,u_ignore,Fracture,0.77556,1514,36398,99
+R13,u_ignore,Support Devices,0.87943,21448,16356,207
+R13,u_one,No Finding,0.87272,3355,34656,0
+R13,u_one,Enlarged Cardiomediastinum,0.64092,3939,34072,2085
+R13,u_one,Cardiomegaly,0.8545,5851,32160,1262
+R13,u_one,Lung Opacity,0.7234,19583,18428,906
+R13,u_one,Lung Lesion,0.77058,1606,36405,207
+R13,u_one,Edema,0.83611,12133,25878,2334
+R13,u_one,Consolidation,0.66805,7389,30622,4784
+R13,u_one,Pneumonia,0.69503,4047,33964,3087
+R13,u_one,Atelectasis,0.67881,11658,26353,5917
+R13,u_one,Pneumothorax,0.85351,4260,33751,547
+R13,u_one,Pleural Effusion,0.86279,17223,20788,1912
+R13,u_one,Pleural Other,0.74132,861,37150,376
+R13,u_one,Fracture,0.77492,1613,36398,99
+R13,u_one,Support Devices,0.87854,21655,16356,207
+R14,u_zero,No Finding,0.87261,3355,34656,0
+R14,u_zero,Enlarged Cardiomediastinum,0.69463,1854,36157,2085
+R14,u_zero,Cardiomegaly,0.87209,4589,33422,1262
+R14,u_zero,Lung Opacity,0.72668,18677,19334,906
+R14,u_zero,Lung Lesion,0.77551,1399,36612,207
+R14,u_zero,Edema,0.83503,9799,28212,2334
+R14,u_zero,Consolidation,0.7292,2605,35406,4784
+R14,u_zero,Pneumonia,0.74604,960,37051,3087
+R14,u_zero,Atelectasis,0.69,5741,32270,5917
+R14,u_zero,Pneumothorax,0.87752,3713,34298,547
+R14,u_zero,Pleural Effusion,0.86866,15311,22700,1912
+R14,u_zero,Pleural Other,0.74288,485,37526,376
+R14,u_zero,Fracture,0.77416,1514,36497,99
+R14,u_zero,Support Devices,0.87734,21448,16563,207
+R14,u_ignore,No Finding,0.87261,3355,34656,0
+R14,u_ignore,Enlarged Cardiomediastinum,0.69891,1854,34072,2085
+R14,u_ignore,Cardiomegaly,0.87912,4589,32160,1262
+R14,u_ignore,Lung Opacity,0.73019,18677,18428,906
+R14,u_ignore,Lung Lesion,0.777,1399,36405,207
+R14,u_ignore,Edema,0.85323,9799,25878,2334
+R14,u_ignore,Consolidation,0.74083,2605,30622,4784
+R14,u_ignore,Pneumonia,0.75964,960,33964,3087
+R14,u_ignore,Atelectasis,0.71301,5741,26353,5917
+R14,u_ignore,Pneumothorax,0.87975,3713,33751,547
+R14,u_ignore,Pleural Effusion,0.88092,15311,20788,1912
+R14,u_ignore,Pleural Other,0.74528,485,37150,376
+R14,u_ignore,Fracture,0.77484,1514,36398,99
+R14,u_ignore,Support Devices,0.88055,21448,16356,207
+R14,u_one,No Finding,0.87261,3355,34656,0
+R14,u_one,Enlarged Cardiomediastinum,0.64047,3939,34072,2085
+R14,u_one,Cardiomegaly,0.85521,5851,32160,1262
+R14,u_one,Lung Opacity,0.72356,19583,18428,906
+R14,u_one,Lung Lesion,0.77747,1606,36405,207
+R14,u_one,Edema,0.83718,12133,25878,2334
+R14,u_one,Consolidation,0.66428,7389,30622,4784
+R14,u_one,Pneumonia,0.69465,4047,33964,3087
+R14,u_one,Atelectasis,0.67889,11658,26353,5917
+R14,u_one,Pneumothorax,0.85269,4260,33751,547
+R14,u_one,Pleural Effusion,0.86241,17223,20788,1912
+R14,u_one,Pleural Other,0.74441,861,37150,376
+R14,u_one,Fracture,0.77368,1613,36398,99
+R14,u_one,Support Devices,0.87966,21655,16356,207
+R15,u_zero,No Finding,0.87331,3355,34656,0
+R15,u_zero,Enlarged Cardiomediastinum,0.69436,1854,36157,2085
+R15,u_zero,Cardiomegaly,0.8697,4589,33422,1262
+R15,u_zero,Lung Opacity,0.72596,18677,19334,906
+R15,u_zero,Lung Lesion,0.75876,1399,36612,207
+R15,u_zero,Edema,0.83402,9799,28212,2334
+R15,u_zero,Consolidation,0.72481,2605,35406,4784
+R15,u_zero,Pneumonia,0.74397,960,37051,3087
+R15,u_zero,Atelectasis,0.68718,5741,32270,5917
+R15,u_zero,Pneumothorax,0.8791,3713,34298,547
+R15,u_zero,Pleural Effusion,0.86769,15311,22700,1912
+R15,u_zero,Pleural Other,0.71505,485,37526,376
+R15,u_zero,Fracture,0.77733,1514,36497,99
+R15,u_zero,Support Devices,0.87619,21448,16563,207
+R15,u_ignore,No Finding,0.87331,3355,34656,0
+R15,u_ignore,Enlarged Cardiomediastinum,0.69861,1854,34072,2085
+R15,u_ignore,Cardiomegaly,0.8768,4589,32160,1262
+R15,u_ignore,Lung Opacity,0.72939,18677,18428,906
+R15,u_ignore,Lung Lesion,0.7603,1399,36405,207
+R15,u_ignore,Edema,0.85258,9799,25878,2334
+R15,u_ignore,Consolidation,0.73776,2605,30622,4784
+R15,u_ignore,Pneumonia,0.75829,960,33964,3087
+R15,u_ignore,Atelectasis,0.71046,5741,26353,5917
+R15,u_ignore,Pneumothorax,0.88122,3713,33751,547
+R15,u_ignore,Pleural Effusion,0.88001,15311,20788,1912
+R15,u_ignore,Pleural Other,0.71723,485,37150,376
+R15,u_ignore,Fracture,0.77805,1514,36398,99
+R15,u_ignore,Support Devices,0.87943,21448,16356,207
+R15,u_one,No Finding,0.87331,3355,34656,0
+R15,u_one,Enlarged Cardiomediastinum,0.63987,3939,34072,2085
+R15,u_one,Cardiomegaly,0.85247,5851,32160,1262
+R15,u_one,Lung Opacity,0.72271,19583,18428,906
+R15,u_one,Lung Lesion,0.76283,1606,36405,207
+R15,u_one,Edema,0.83673,12133,25878,2334
+R15,u_one,Consolidation,0.66847,7389,30622,4784
+R15,u_one,Pneumonia,0.6989,4047,33964,3087
+R15,u_one,Atelectasis,0.67895,11658,26353,5917
+R15,u_one,Pneumothorax,0.85278,4260,33751,547
+R15,u_one,Pleural Effusion,0.86134,17223,20788,1912
+R15,u_one,Pleural Other,0.71965,861,37150,376
+R15,u_one,Fracture,0.77697,1613,36398,99
+R15,u_one,Support Devices,0.87857,21655,16356,207
+R16,u_zero,No Finding,0.87372,3355,34656,0
+R16,u_zero,Enlarged Cardiomediastinum,0.69484,1854,36157,2085
+R16,u_zero,Cardiomegaly,0.87022,4589,33422,1262
+R16,u_zero,Lung Opacity,0.72676,18677,19334,906
+R16,u_zero,Lung Lesion,0.77507,1399,36612,207
+R16,u_zero,Edema,0.83395,9799,28212,2334
+R16,u_zero,Consolidation,0.72799,2605,35406,4784
+R16,u_zero,Pneumonia,0.74847,960,37051,3087
+R16,u_zero,Atelectasis,0.6906,5741,32270,5917
+R16,u_zero,Pneumothorax,0.88213,3713,34298,547
+R16,u_zero,Pleural Effusion,0.86833,15311,22700,1912
+R16,u_zero,Pleural Other,0.71959,485,37526,376
+R16,u_zero,Fracture,0.76877,1514,36497,99
+R16,u_zero,Support Devices,0.87658,21448,16563,207
+R16,u_ignore,No Finding,0.87372,3355,34656,0
+R16,u_ignore,Enlarged Cardiomediastinum,0.69905,1854,34072,2085
+R16,u_ignore,Cardiomegaly,0.87714,4589,32160,1262
+R16,u_ignore,Lung Opacity,0.72999,18677,18428,906
+R16,u_ignore,Lung Lesion,0.77669,1399,36405,207
+R16,u_ignore,Edema,0.85294,9799,25878,2334
+R16,u_ignore,Consolidation,0.74115,2605,30622,4784
+R16,u_ignore,Pneumonia,0.76337,960,33964,3087
+R16,u_ignore,Atelectasis,0.71421,5741,26353,5917
+R16,u_ignore,Pneumothorax,0.88437,3713,33751,547
+R16,u_ignore,Pleural Effusion,0.88069,15311,20788,1912
+R16,u_ignore,Pleural Other,0.72191,485,37150,376
+R16,u_ignore,Fracture,0.76946,1514,36398,99
+R16,u_ignore,Support Devices,0.87977,21448,16356,207
+R16,u_one,No Finding,0.87372,3355,34656,0
+R16,u_one,Enlarged Cardiomediastinum,0.63986,3939,34072,2085
+R16,u_one,Cardiomegaly,0.85227,5851,32160,1262
+R16,u_one,Lung Opacity,0.72319,19583,18428,906
+R16,u_one,Lung Lesion,0.77906,1606,36405,207
+R16,u_one,Edema,0.8374,12133,25878,2334
+R16,u_one,Consolidation,0.67079,7389,30622,4784
+R16,u_one,Pneumonia,0.70799,4047,33964,3087
+R16,u_one,Atelectasis,0.68147,11658,26353,5917
+R16,u_one,Pneumothorax,0.85626,4260,33751,547
+R16,u_one,Pleural Effusion,0.86186,17223,20788,1912
+R16,u_one,Pleural Other,0.73155,861,37150,376
+R16,u_one,Fracture,0.76834,1613,36398,99
+R16,u_one,Support Devices,0.87888,21655,16356,207
+R18,u_zero,No Finding,0.87261,3355,34656,0
+R18,u_zero,Enlarged Cardiomediastinum,0.69672,1854,36157,2085
+R18,u_zero,Cardiomegaly,0.87129,4589,33422,1262
+R18,u_zero,Lung Opacity,0.72643,18677,19334,906
+R18,u_zero,Lung Lesion,0.78006,1399,36612,207
+R18,u_zero,Edema,0.83449,9799,28212,2334
+R18,u_zero,Consolidation,0.72886,2605,35406,4784
+R18,u_zero,Pneumonia,0.74864,960,37051,3087
+R18,u_zero,Atelectasis,0.68825,5741,32270,5917
+R18,u_zero,Pneumothorax,0.88055,3713,34298,547
+R18,u_zero,Pleural Effusion,0.86798,15311,22700,1912
+R18,u_zero,Pleural Other,0.73191,485,37526,376
+R18,u_zero,Fracture,0.76148,1514,36497,99
+R18,u_zero,Support Devices,0.87577,21448,16563,207
+R18,u_ignore,No Finding,0.87261,3355,34656,0
+R18,u_ignore,Enlarged Cardiomediastinum,0.70095,1854,34072,2085
+R18,u_ignore,Cardiomegaly,0.87823,4589,32160,1262
+R18,u_ignore,Lung Opacity,0.72967,18677,18428,906
+R18,u_ignore,Lung Lesion,0.78164,1399,36405,207
+R18,u_ignore,Edema,0.85316,9799,25878,2334
+R18,u_ignore,Consolidation,0.74143,2605,30622,4784
+R18,u_ignore,Pneumonia,0.76339,960,33964,3087
+R18,u_ignore,Atelectasis,0.71205,5741,26353,5917
+R18,u_ignore,Pneumothorax,0.88283,3713,33751,547
+R18,u_ignore,Pleural Effusion,0.88023,15311,20788,1912
+R18,u_ignore,Pleural Other,0.73417,485,37150,376
+R18,u_ignore,Fracture,0.76213,1514,36398,99
+R18,u_ignore,Support Devices,0.87897,21448,16356,207
+R18,u_one,No Finding,0.87261,3355,34656,0
+R18,u_one,Enlarged Cardiomediastinum,0.64068,3939,34072,2085
+R18,u_one,Cardiomegaly,0.85308,5851,32160,1262
+R18,u_one,Lung Opacity,0.72293,19583,18428,906
+R18,u_one,Lung Lesion,0.78326,1606,36405,207
+R18,u_one,Edema,0.83754,12133,25878,2334
+R18,u_one,Consolidation,0.66856,7389,30622,4784
+R18,u_one,Pneumonia,0.70787,4047,33964,3087
+R18,u_one,Atelectasis,0.68105,11658,26353,5917
+R18,u_one,Pneumothorax,0.85532,4260,33751,547
+R18,u_one,Pleural Effusion,0.8614,17223,20788,1912
+R18,u_one,Pleural Other,0.73778,861,37150,376
+R18,u_one,Fracture,0.76073,1613,36398,99
+R18,u_one,Support Devices,0.87813,21655,16356,207
+R19,u_zero,No Finding,0.87415,3355,34656,0
+R19,u_zero,Enlarged Cardiomediastinum,0.69697,1854,36157,2085
+R19,u_zero,Cardiomegaly,0.87208,4589,33422,1262
+R19,u_zero,Lung Opacity,0.72692,18677,19334,906
+R19,u_zero,Lung Lesion,0.7801,1399,36612,207
+R19,u_zero,Edema,0.83357,9799,28212,2334
+R19,u_zero,Consolidation,0.72846,2605,35406,4784
+R19,u_zero,Pneumonia,0.7465,960,37051,3087
+R19,u_zero,Atelectasis,0.69167,5741,32270,5917
+R19,u_zero,Pneumothorax,0.8834,3713,34298,547
+R19,u_zero,Pleural Effusion,0.8682,15311,22700,1912
+R19,u_zero,Pleural Other,0.73927,485,37526,376
+R19,u_zero,Fracture,0.77364,1514,36497,99
+R19,u_zero,Support Devices,0.8771,21448,16563,207
+R19,u_ignore,No Finding,0.87415,3355,34656,0
+R19,u_ignore,Enlarged Cardiomediastinum,0.70115,1854,34072,2085
+R19,u_ignore,Cardiomegaly,0.87894,4589,32160,1262
+R19,u_ignore,Lung Opacity,0.7301,18677,18428,906
+R19,u_ignore,Lung Lesion,0.78172,1399,36405,207
+R19,u_ignore,Edema,0.85269,9799,25878,2334
+R19,u_ignore,Consolidation,0.7412,2605,30622,4784
+R19,u_ignore,Pneumonia,0.7611,960,33964,3087
+R19,u_ignore,Atelectasis,0.71539,5741,26353,5917
+R19,u_ignore,Pneumothorax,0.88557,3713,33751,547
+R19,u_ignore,Pleural Effusion,0.88029,15311,20788,1912
+R19,u_ignore,Pleural Other,0.74148,485,37150,376
+R19,u_ignore,Fracture,0.77431,1514,36398,99
+R19,u_ignore,Support Devices,0.88022,21448,16356,207
+R19,u_one,No Finding,0.87415,3355,34656,0
+R19,u_one,Enlarged Cardiomediastinum,0.64021,3939,34072,2085
+R19,u_one,Cardiomegaly,0.85395,5851,32160,1262
+R19,u_one,Lung Opacity,0.7233,19583,18428,906
+R19,u_one,Lung Lesion,0.78383,1606,36405,207
+R19,u_one,Edema,0.8373,12133,25878,2334
+R19,u_one,Consolidation,0.66929,7389,30622,4784
+R19,u_one,Pneumonia,0.70509,4047,33964,3087
+R19,u_one,Atelectasis,0.68247,11658,26353,5917
+R19,u_one,Pneumothorax,0.85702,4260,33751,547
+R19,u_one,Pleural Effusion,0.86123,17223,20788,1912
+R19,u_one,Pleural Other,0.7406,861,37150,376
+R19,u_one,Fracture,0.77297,1613,36398,99
+R19,u_one,Support Devices,0.87932,21655,16356,207

@@ -1,0 +1,18 @@
+{
+  "run_id": "R19",
+  "variant": "drift_strong",
+  "alpha_n": 1.0,
+  "beta_q": 1.0,
+  "gamma_d": 1.0,
+  "final_metrics": {
+    "round": 5.0,
+    "macro_auroc": 0.7922865254423334,
+    "macro_auprc": 0.3934147405363807,
+    "sensitivity": 0.5238013049165741,
+    "specificity": 0.8279439815900734,
+    "ppv": 0.3800327627487183,
+    "npv": 0.9233765240233138,
+    "f1": 0.394423450277131,
+    "accuracy": 0.829910138794409
+  }
+}

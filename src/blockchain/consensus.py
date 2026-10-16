@@ -1,5 +1,3 @@
-#########----------------------------------------------------------------------#######
-#########----------src/blockchain/consensus---------------------------------------#######
 """Compatibility export for consensus errors."""
 
 from src.blockchain.permissioned_ledger import ConsensusError

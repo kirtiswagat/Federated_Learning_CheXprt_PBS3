@@ -1,0 +1,43 @@
+partition,label,min_pct,max_pct,range_pct_points
+dirichlet_5_0.1,Atelectasis,12.627,18.918,6.291
+dirichlet_5_0.1,Cardiomegaly,2.783,4.556,1.772
+dirichlet_5_0.1,Consolidation,10.536,14.798,4.262
+dirichlet_5_0.1,Edema,4.659,8.594,3.935
+dirichlet_5_0.1,Enlarged Cardiomediastinum,4.725,6.557,1.832
+dirichlet_5_0.1,Fracture,0.176,0.311,0.135
+dirichlet_5_0.1,Lung Lesion,0.433,0.81,0.377
+dirichlet_5_0.1,Lung Opacity,1.764,2.487,0.723
+dirichlet_5_0.1,No Finding,0.0,0.0,0.0
+dirichlet_5_0.1,Pleural Effusion,4.213,6.308,2.096
+dirichlet_5_0.1,Pleural Other,0.848,1.331,0.482
+dirichlet_5_0.1,Pneumonia,6.63,10.449,3.819
+dirichlet_5_0.1,Pneumothorax,1.184,1.569,0.385
+dirichlet_5_0.1,Support Devices,0.354,0.576,0.222
+dirichlet_5_0.3,Atelectasis,12.806,18.07,5.264
+dirichlet_5_0.3,Cardiomegaly,2.441,4.205,1.764
+dirichlet_5_0.3,Consolidation,10.354,15.127,4.773
+dirichlet_5_0.3,Edema,4.026,8.562,4.536
+dirichlet_5_0.3,Enlarged Cardiomediastinum,4.709,5.965,1.256
+dirichlet_5_0.3,Fracture,0.209,0.343,0.134
+dirichlet_5_0.3,Lung Lesion,0.427,0.831,0.404
+dirichlet_5_0.3,Lung Opacity,1.872,2.928,1.056
+dirichlet_5_0.3,No Finding,0.0,0.0,0.0
+dirichlet_5_0.3,Pleural Effusion,3.909,5.901,1.992
+dirichlet_5_0.3,Pleural Other,0.765,1.209,0.444
+dirichlet_5_0.3,Pneumonia,5.676,9.884,4.208
+dirichlet_5_0.3,Pneumothorax,1.276,1.581,0.305
+dirichlet_5_0.3,Support Devices,0.385,0.51,0.125
+iid_5,Atelectasis,15.531,15.794,0.263
+iid_5,Cardiomegaly,3.465,3.682,0.217
+iid_5,Consolidation,12.452,13.063,0.611
+iid_5,Edema,6.107,6.287,0.181
+iid_5,Enlarged Cardiomediastinum,5.202,5.541,0.339
+iid_5,Fracture,0.232,0.281,0.049
+iid_5,Lung Lesion,0.547,0.634,0.087
+iid_5,Lung Opacity,2.191,2.504,0.313
+iid_5,No Finding,0.0,0.0,0.0
+iid_5,Pleural Effusion,4.798,5.212,0.413
+iid_5,Pleural Other,0.844,0.983,0.139
+iid_5,Pneumonia,8.282,8.645,0.363
+iid_5,Pneumothorax,1.324,1.537,0.213
+iid_5,Support Devices,0.411,0.517,0.106

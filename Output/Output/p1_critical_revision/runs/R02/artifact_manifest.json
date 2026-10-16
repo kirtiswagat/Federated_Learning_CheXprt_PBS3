@@ -1,0 +1,69 @@
+{
+  "artifacts": [
+    {
+      "name": "blockchain_commitment_summary.csv",
+      "sha256": "987f1e259fe89fc21754e02c3e33ff5e2016438db2f278f693e24bf82081f070",
+      "size": 1758
+    },
+    {
+      "name": "client_round_details.csv",
+      "sha256": "92eb99ba8137aebd90e10ac0b1cd5248764b699a835958a8064b21547c41e1c9",
+      "size": 726
+    },
+    {
+      "name": "endpoint_macro_metrics.csv",
+      "sha256": "7c97a720602ec562109670e46eca6b84116a8048b56b9e991586934abd1d512b",
+      "size": 219
+    },
+    {
+      "name": "endpoint_model.pt",
+      "sha256": "e7e4eda4976bd889a6b9bd48ffc8c728080b8b415f9657abb23b19ead39254ab",
+      "size": 94457065
+    },
+    {
+      "name": "endpoint_per_label_metrics.csv",
+      "sha256": "f0e19e0971c93fd2f1796f29888812a633a3014355d8b9658617df61e6ee85f9",
+      "size": 2504
+    },
+    {
+      "name": "endpoint_valid_predictions.csv",
+      "sha256": "fb0346bc68505423c1cce4af78524858f5204b4a9db00be55d8aef875d7ef7a8",
+      "size": 10883220
+    },
+    {
+      "name": "environment_report.json",
+      "sha256": "c47dfef01f0142e01ed01a5753b5cdb7847d012295b8ef81fc177291ac80b821",
+      "size": 48
+    },
+    {
+      "name": "ledger.json",
+      "sha256": "b4fe804bc1967d40bf758a329287e08092e2ee9a745f6c3ff7ef08c9ff052112",
+      "size": 11101
+    },
+    {
+      "name": "resume_checkpoint.pt",
+      "sha256": "e0b25c4f9dea1bd88829a15e307c2edf8219c1a947ce2028ceda41d0ea9ed15b",
+      "size": 94504205
+    },
+    {
+      "name": "round_history.csv",
+      "sha256": "f8f719a1ef79185978884b1249b5afd9d30f1a5a8b36ead4f466c003601aeea6",
+      "size": 844
+    },
+    {
+      "name": "runtime_breakdown.csv",
+      "sha256": "e708414eccc0e85543b377e9222afc3aacb306750599c170421b81b350567156",
+      "size": 12942
+    },
+    {
+      "name": "training_config.json",
+      "sha256": "1d6a93c369148fbe32ea81ddfb15a4a1675ae8a60dbb698578f8f46351c7530a",
+      "size": 1924
+    }
+  ],
+  "config_checksum": "1d6a93c369148fbe32ea81ddfb15a4a1675ae8a60dbb698578f8f46351c7530a",
+  "device_type": "mps",
+  "endpoint_model_checksum": "e7e4eda4976bd889a6b9bd48ffc8c728080b8b415f9657abb23b19ead39254ab",
+  "run_id": "R02",
+  "validation_cohort_checksum": "fb0346bc68505423c1cce4af78524858f5204b4a9db00be55d8aef875d7ef7a8"
+}

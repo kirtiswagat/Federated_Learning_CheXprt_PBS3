@@ -1,0 +1,14 @@
+{
+  "run_id": "R21",
+  "algorithm": "FedAvg",
+  "partition": "dirichlet",
+  "clients": 5,
+  "rounds": 5,
+  "alpha": 0.1,
+  "participation_rate": 1.0,
+  "mu": 0.0,
+  "uncertainty_policy": "mapping",
+  "uncertainty_mapping": [],
+  "status": "configuration_ready",
+  "training_adapter_required": true
+}

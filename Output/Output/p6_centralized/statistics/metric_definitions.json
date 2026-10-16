@@ -1,0 +1,14 @@
+{
+  "unit_of_resampling": "patient (all images of a patient move together)",
+  "bootstrap": {
+    "iterations": 2000,
+    "seed": 42,
+    "interval": "95% percentile"
+  },
+  "macro_auroc_14": "unweighted mean of the 14 per-label AUROCs; a label is skipped in a resample only when it has no positives or no negatives",
+  "macro_auroc_5comp": "mean AUROC over the 5 CheXpert competition labels: Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion",
+  "fracture": "kept in the 14-label macro; reported separately with CI; flagged low_support when positives < 50",
+  "operating_metrics": "sensitivity, specificity, PPV, NPV and F1 at probability threshold 0.5, macro-averaged over labels",
+  "labels": "U-Zero: uncertain (-1) and unmentioned labels are negatives",
+  "paired_comparison": "same patient resample applied to both models; two-sided p-value from the paired differences; Benjamini-Hochberg within each metric family"
+}

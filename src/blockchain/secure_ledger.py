@@ -1,5 +1,3 @@
-########----------------------------------------------------------------------########
-########----------src/blockchain/secure_ledger--------------------------------#######
 """Signed permissioned ledger: client signatures are verified before commitment and
 validator votes are Ed25519 signatures over the block hash."""
 
@@ -189,4 +187,3 @@ class SecureLedger:
         path.with_name(path.stem + "_registry.json").write_text(
             json.dumps(self.registry(), indent=2) + "\n"
         )
-

@@ -1,0 +1,5 @@
+| partition | images_per_client_min | images_per_client_max | mean_JS_divergence | max_JS_divergence | mean_prevalence_shift |
+|---|---|---|---|---|---|
+| iid_5 | 35287 | 36110 | 0.0001 | 0.0002 | 0.0024 |
+| dirichlet_5_0.3 | 29325 | 53252 | 0.0387 | 0.0521 | 0.0359 |
+| dirichlet_5_0.1 | 10947 | 72678 | 0.0823 | 0.1991 | 0.0489 |

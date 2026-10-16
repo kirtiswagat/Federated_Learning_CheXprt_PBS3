@@ -1,5 +1,3 @@
-########----------------------------------------------------------------------#######
-#######----------src/blockchain/permissioned_ledger---------------------------#######
 """Replicated majority-finality ledger for experiment commitments."""
 
 from __future__ import annotations
@@ -116,4 +114,3 @@ class PermissionedLedger:
             json.dumps([asdict(block) for block in self.blocks], indent=2, default=list)
             + "\n"
         )
-

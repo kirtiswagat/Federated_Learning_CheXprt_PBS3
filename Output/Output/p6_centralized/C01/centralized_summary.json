@@ -1,0 +1,33 @@
+{
+  "images": 153016,
+  "epochs": 5,
+  "seed": 42,
+  "history": [
+    {
+      "epoch": 1,
+      "train_seconds": 3110.2834911346436,
+      "mean_loss": 0.7521526147410841
+    },
+    {
+      "epoch": 2,
+      "train_seconds": 3083.59814119339,
+      "mean_loss": 0.6948566571289353
+    },
+    {
+      "epoch": 3,
+      "train_seconds": 3082.6931252479553,
+      "mean_loss": 0.6513743383217088
+    },
+    {
+      "epoch": 4,
+      "train_seconds": 3079.6731090545654,
+      "mean_loss": 0.5897910193805413
+    },
+    {
+      "epoch": 5,
+      "train_seconds": 3074.518716096878,
+      "mean_loss": 0.5090537727633214
+    }
+  ],
+  "endpoint": "last epoch, no best-epoch selection"
+}

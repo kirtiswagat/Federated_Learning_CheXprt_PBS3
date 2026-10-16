@@ -1,0 +1,22 @@
+{
+  "train_csv": "/Users/e689452/Documents/PhD/Dataset/CheXpert-v1.0-small/train.csv",
+  "valid_csv": "/Users/e689452/Documents/PhD/Dataset/CheXpert-v1.0-small/valid.csv",
+  "labels": [
+    "No Finding",
+    "Enlarged Cardiomediastinum",
+    "Cardiomegaly",
+    "Lung Opacity",
+    "Lung Lesion",
+    "Edema",
+    "Consolidation",
+    "Pneumonia",
+    "Atelectasis",
+    "Pneumothorax",
+    "Pleural Effusion",
+    "Pleural Other",
+    "Fracture",
+    "Support Devices"
+  ],
+  "patient_overlap_count": 0,
+  "generated_at": "2026-10-09T20:59:31.704339+00:00"
+}

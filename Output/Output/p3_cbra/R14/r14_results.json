@@ -1,0 +1,18 @@
+{
+  "run_id": "R14",
+  "variant": "sample_lower",
+  "alpha_n": 0.5,
+  "beta_q": 1.0,
+  "gamma_d": 0.5,
+  "final_metrics": {
+    "round": 5.0,
+    "macro_auroc": 0.7915968805981558,
+    "macro_auprc": 0.3918043748785397,
+    "sensitivity": 0.5054187315770551,
+    "specificity": 0.8333440926755813,
+    "ppv": 0.3860126408465932,
+    "npv": 0.9218381552173636,
+    "f1": 0.3911718916583758,
+    "accuracy": 0.8333828177557623
+  }
+}
